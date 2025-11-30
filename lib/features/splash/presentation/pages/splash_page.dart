@@ -66,9 +66,9 @@ class _SplashPageState extends State<SplashPage>
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Lottie.asset(
-                  'assets/animations/satellite.json',
-                  width: 200,
-                  height: 200,
+                  'assets/animations/satellite_dish.json',
+                  width: double.maxFinite,
+                  height: 300,
                   fit: BoxFit.contain,
                 ),
                 const SizedBox(height: 24),

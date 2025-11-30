@@ -40,5 +40,7 @@ flutter:
 
   assets:
     - assets/animations/satellite.json
+    - assets/animations/antenna.json
+    - assets/animations/satellite_dish.json
     - assets/sample_habits_import.csv
     - assets/CSV_IMPORT_FORMAT.md
