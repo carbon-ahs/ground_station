@@ -33,7 +33,10 @@ final appRouter = GoRouter(
           routes: [
             GoRoute(
               path: '/habits',
-              builder: (context, state) => const HabitsPage(),
+              builder: (context, state) => BlocProvider(
+                create: (context) => getIt<HabitBloc>()..add(LoadHabits()),
+                child: const HabitsPage(),
+              ),
             ),
           ],
         ),

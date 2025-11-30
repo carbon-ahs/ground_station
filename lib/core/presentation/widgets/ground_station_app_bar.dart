@@ -25,12 +25,12 @@ class GroundStationAppBar extends StatelessWidget
           colors: isDark
               ? [
                   Theme.of(context).colorScheme.surface,
-                  Theme.of(context).colorScheme.surface.withOpacity(0.95),
+                  Theme.of(context).colorScheme.surface.withValues(alpha: 0.95),
                 ]
               : [
                   Theme.of(
                     context,
-                  ).colorScheme.primaryContainer.withOpacity(0.3),
+                  ).colorScheme.primaryContainer.withValues(alpha: 0.3),
                   Theme.of(context).colorScheme.surface,
                 ],
         ),

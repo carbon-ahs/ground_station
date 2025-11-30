@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lottie/lottie.dart';
 
-import '../../../../core/di/injection.dart';
 import '../../../../core/presentation/widgets/ground_station_app_bar.dart';
 import '../../domain/entities/habit.dart';
 import '../bloc/habit_bloc.dart';
@@ -15,10 +15,7 @@ class HabitsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => getIt<HabitBloc>()..add(LoadHabits()),
-      child: const HabitsView(),
-    );
+    return const HabitsView();
   }
 }
 
@@ -28,7 +25,7 @@ class HabitsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const GroundStationAppBar(title: 'Ground Station'),
+      appBar: const GroundStationAppBar(title: 'Habits'),
       body: BlocBuilder<HabitBloc, HabitState>(
         builder: (context, state) {
           if (state.status == HabitStatus.loading) {
@@ -36,12 +33,26 @@ class HabitsView extends StatelessWidget {
           } else if (state.status == HabitStatus.failure) {
             return Center(child: Text('Error: ${state.errorMessage}'));
           } else if (state.habits.isEmpty) {
-            return const Center(child: Text('No habits yet. Add one!'));
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // lottie animation
+                  Lottie.asset('assets/animations/antenna.json'),
+                  SizedBox(height: 16),
+                  Text(
+                    'No habits yet. Add one!',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                  ),
+                ],
+              ),
+            );
           } else {
             return ListView.builder(
               itemCount: state.habits.length,
               itemBuilder: (context, index) {
-                return HabitItem(habit: state.habits[index]);
+                final habit = state.habits[index];
+                return HabitItem(key: ValueKey(habit.id), habit: habit);
               },
             );
           }

@@ -88,8 +88,9 @@ class CompletionLineChart extends StatelessWidget {
                     reservedSize: 32,
                     interval: 7,
                     getTitlesWidget: (value, meta) {
-                      if (value < 0 || value >= daysDiff)
+                      if (value < 0 || value >= daysDiff) {
                         return const SizedBox();
+                      }
                       final date = startDate.add(Duration(days: value.toInt()));
                       return Padding(
                         padding: const EdgeInsets.only(top: 8.0),
@@ -111,16 +112,15 @@ class CompletionLineChart extends StatelessWidget {
                     interval: 1,
                     reservedSize: 50,
                     getTitlesWidget: (value, meta) {
+                      if (value != 1) return const SizedBox();
                       return Padding(
                         padding: const EdgeInsets.only(right: 8.0),
                         child: Text(
-                          value == 1 ? '✓ Done' : '✗ Missed',
+                          '✓ Done',
                           style: TextStyle(
                             fontSize: 11,
                             fontWeight: FontWeight.w500,
-                            color: value == 1
-                                ? colorScheme.primary
-                                : colorScheme.error,
+                            color: colorScheme.primary,
                           ),
                         ),
                       );

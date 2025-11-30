@@ -71,7 +71,8 @@ class HabitBloc extends Bloc<HabitEvent, HabitState>
   Future<void> _onAddHabit(AddHabit event, Emitter<HabitState> emit) async {
     try {
       await _habitRepository.addHabit(event.habit);
-      add(LoadHabits());
+      final habits = await _habitRepository.getHabits();
+      emit(state.copyWith(status: HabitStatus.success, habits: habits));
     } catch (e) {
       emit(
         state.copyWith(status: HabitStatus.failure, errorMessage: e.toString()),
@@ -85,7 +86,8 @@ class HabitBloc extends Bloc<HabitEvent, HabitState>
   ) async {
     try {
       await _habitRepository.updateHabit(event.habit);
-      add(LoadHabits());
+      final habits = await _habitRepository.getHabits();
+      emit(state.copyWith(status: HabitStatus.success, habits: habits));
     } catch (e) {
       emit(
         state.copyWith(status: HabitStatus.failure, errorMessage: e.toString()),
@@ -99,7 +101,8 @@ class HabitBloc extends Bloc<HabitEvent, HabitState>
   ) async {
     try {
       await _habitRepository.deleteHabit(event.id);
-      add(LoadHabits());
+      final habits = await _habitRepository.getHabits();
+      emit(state.copyWith(status: HabitStatus.success, habits: habits));
     } catch (e) {
       emit(
         state.copyWith(status: HabitStatus.failure, errorMessage: e.toString()),
@@ -113,7 +116,12 @@ class HabitBloc extends Bloc<HabitEvent, HabitState>
   ) async {
     try {
       await _habitRepository.toggleCompletion(event.habitId, event.date);
-      add(LoadHabits());
+
+      // Reload habits to get updated data
+      final habits = await _habitRepository.getHabits();
+
+      // Update state directly without going through loading state
+      emit(state.copyWith(status: HabitStatus.success, habits: habits));
     } catch (e) {
       emit(
         state.copyWith(status: HabitStatus.failure, errorMessage: e.toString()),
