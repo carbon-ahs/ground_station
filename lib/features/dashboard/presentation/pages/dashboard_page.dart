@@ -120,24 +120,6 @@ class DashboardPage extends StatelessWidget {
           );
         },
       ),
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: 0,
-        onDestinationSelected: (index) {
-          if (index == 1) {
-            context.go('/habits');
-          } else if (index == 2) {
-            context.go('/settings');
-          }
-        },
-        destinations: const [
-          NavigationDestination(
-            icon: Icon(Icons.dashboard),
-            label: 'Dashboard',
-          ),
-          NavigationDestination(icon: Icon(Icons.check_box), label: 'Habits'),
-          NavigationDestination(icon: Icon(Icons.settings), label: 'Settings'),
-        ],
-      ),
     );
   }
 }

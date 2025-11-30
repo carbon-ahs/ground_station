@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:go_router/go_router.dart';
+
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import '../../../../core/services/csv_service.dart';
@@ -208,24 +208,6 @@ class SettingsPage extends StatelessWidget {
             title: const Text('Ground Station'),
             subtitle: const Text('Your Personal Mission Control'),
           ),
-        ],
-      ),
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: 2,
-        onDestinationSelected: (index) {
-          if (index == 0) {
-            context.go('/dashboard');
-          } else if (index == 1) {
-            context.go('/habits');
-          }
-        },
-        destinations: const [
-          NavigationDestination(
-            icon: Icon(Icons.dashboard),
-            label: 'Dashboard',
-          ),
-          NavigationDestination(icon: Icon(Icons.check_box), label: 'Habits'),
-          NavigationDestination(icon: Icon(Icons.settings), label: 'Settings'),
         ],
       ),
     );

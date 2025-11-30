@@ -7,25 +7,48 @@ import '../../features/habits/presentation/bloc/habit_bloc.dart';
 import '../../features/habits/presentation/bloc/habit_event.dart';
 import '../../core/di/injection.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'scaffold_with_nav_bar.dart';
 
 final appRouter = GoRouter(
   initialLocation: '/',
   routes: [
     GoRoute(path: '/', builder: (context, state) => const SplashPage()),
-    GoRoute(
-      path: '/dashboard',
-      builder: (context, state) => BlocProvider(
-        create: (context) => getIt<HabitBloc>()..add(LoadHabits()),
-        child: const DashboardPage(),
-      ),
-    ),
-    GoRoute(path: '/habits', builder: (context, state) => const HabitsPage()),
-    GoRoute(
-      path: '/settings',
-      builder: (context, state) => BlocProvider(
-        create: (context) => getIt<HabitBloc>()..add(LoadHabits()),
-        child: const SettingsPage(),
-      ),
+    StatefulShellRoute.indexedStack(
+      builder: (context, state, navigationShell) {
+        return ScaffoldWithNavBar(navigationShell: navigationShell);
+      },
+      branches: [
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: '/dashboard',
+              builder: (context, state) => BlocProvider(
+                create: (context) => getIt<HabitBloc>()..add(LoadHabits()),
+                child: const DashboardPage(),
+              ),
+            ),
+          ],
+        ),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: '/habits',
+              builder: (context, state) => const HabitsPage(),
+            ),
+          ],
+        ),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: '/settings',
+              builder: (context, state) => BlocProvider(
+                create: (context) => getIt<HabitBloc>()..add(LoadHabits()),
+                child: const SettingsPage(),
+              ),
+            ),
+          ],
+        ),
+      ],
     ),
   ],
 );

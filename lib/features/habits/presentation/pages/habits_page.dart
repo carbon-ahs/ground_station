@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
+
 import '../../../../core/di/injection.dart';
 import '../../domain/entities/habit.dart';
 import '../bloc/habit_bloc.dart';
@@ -57,24 +57,6 @@ class HabitsView extends StatelessWidget {
           }
         },
         child: const Icon(Icons.add),
-      ),
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: 1,
-        onDestinationSelected: (index) {
-          if (index == 0) {
-            context.go('/dashboard');
-          } else if (index == 2) {
-            context.go('/settings');
-          }
-        },
-        destinations: const [
-          NavigationDestination(
-            icon: Icon(Icons.dashboard),
-            label: 'Dashboard',
-          ),
-          NavigationDestination(icon: Icon(Icons.check_box), label: 'Habits'),
-          NavigationDestination(icon: Icon(Icons.settings), label: 'Settings'),
-        ],
       ),
     );
   }
