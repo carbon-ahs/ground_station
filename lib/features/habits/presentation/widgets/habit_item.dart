@@ -5,6 +5,7 @@ import '../../domain/entities/habit.dart';
 import '../bloc/habit_bloc.dart';
 import '../bloc/habit_event.dart';
 import 'edit_habit_dialog.dart';
+import '../pages/habit_chart_page.dart';
 
 class HabitItem extends StatelessWidget {
   final Habit habit;
@@ -62,6 +63,16 @@ class HabitItem extends StatelessWidget {
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
+            IconButton(
+              icon: const Icon(Icons.show_chart),
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => HabitChartPage(habit: habit),
+                  ),
+                );
+              },
+            ),
             IconButton(
               icon: const Icon(Icons.edit_outlined),
               onPressed: () async {

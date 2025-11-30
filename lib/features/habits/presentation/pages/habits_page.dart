@@ -63,6 +63,8 @@ class HabitsView extends StatelessWidget {
         onDestinationSelected: (index) {
           if (index == 0) {
             context.go('/dashboard');
+          } else if (index == 2) {
+            context.go('/settings');
           }
         },
         destinations: const [
@@ -71,6 +73,7 @@ class HabitsView extends StatelessWidget {
             label: 'Dashboard',
           ),
           NavigationDestination(icon: Icon(Icons.check_box), label: 'Habits'),
+          NavigationDestination(icon: Icon(Icons.settings), label: 'Settings'),
         ],
       ),
     );

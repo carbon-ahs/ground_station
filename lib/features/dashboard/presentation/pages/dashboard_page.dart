@@ -125,6 +125,8 @@ class DashboardPage extends StatelessWidget {
         onDestinationSelected: (index) {
           if (index == 1) {
             context.go('/habits');
+          } else if (index == 2) {
+            context.go('/settings');
           }
         },
         destinations: const [
@@ -133,6 +135,7 @@ class DashboardPage extends StatelessWidget {
             label: 'Dashboard',
           ),
           NavigationDestination(icon: Icon(Icons.check_box), label: 'Habits'),
+          NavigationDestination(icon: Icon(Icons.settings), label: 'Settings'),
         ],
       ),
     );
