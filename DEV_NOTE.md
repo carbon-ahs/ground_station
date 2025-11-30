@@ -1,0 +1,1 @@
+i want to add a fix habit, drink 8 glass of water per day. i may change this 8 in future. i want to change it from settings but deflut is 8. add this ui to dashbourd and make it work.
