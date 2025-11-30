@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:go_router/go_router.dart';
+import 'dart:io';
+import 'package:path_provider/path_provider.dart';
 import '../../../../core/services/csv_service.dart';
 import '../../../../core/di/injection.dart';
 import '../../../habits/presentation/bloc/habit_bloc.dart';
@@ -111,6 +113,34 @@ class SettingsPage extends StatelessWidget {
             ),
           ),
           actions: [
+            TextButton(
+              onPressed: () async {
+                try {
+                  final directory = await getApplicationDocumentsDirectory();
+                  final file = File(
+                    '${directory.path}/sample_habits_import.csv',
+                  );
+                  await file.writeAsString(sampleCSV);
+
+                  if (context.mounted) {
+                    Navigator.of(context).pop(); // Close dialog
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Sample CSV saved to:\n${file.path}'),
+                        duration: const Duration(seconds: 4),
+                      ),
+                    );
+                  }
+                } catch (e) {
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Failed to save sample CSV: $e')),
+                    );
+                  }
+                }
+              },
+              child: const Text('Download Sample'),
+            ),
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
               child: const Text('Close'),
