@@ -12,7 +12,7 @@ class GroundStationApp extends StatelessWidget {
       theme: ThemeData(
         useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF6750A4),
+          seedColor: const Color(0xFF3F51B5),
           brightness: Brightness.light,
         ),
         textTheme: GoogleFonts.interTextTheme(),
@@ -20,7 +20,7 @@ class GroundStationApp extends StatelessWidget {
       darkTheme: ThemeData(
         useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFFD0BCFF),
+          seedColor: const Color(0xFFFF5722),
           brightness: Brightness.dark,
         ),
         textTheme: GoogleFonts.interTextTheme(ThemeData.dark().textTheme),
