@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:file_picker/file_picker.dart';
-
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import '../../../../core/services/csv_service.dart';
 import '../../../../core/di/injection.dart';
 import '../../../habits/presentation/bloc/habit_bloc.dart';
 import '../../../habits/presentation/bloc/habit_event.dart';
+import '../bloc/settings_bloc.dart';
+import '../bloc/settings_state.dart';
+import '../bloc/settings_event.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
@@ -157,6 +159,63 @@ class SettingsPage extends StatelessWidget {
       appBar: AppBar(title: const Text('Settings'), centerTitle: true),
       body: ListView(
         children: [
+          const Padding(
+            padding: EdgeInsets.all(16.0),
+            child: Text(
+              'Appearance',
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                color: Colors.grey,
+              ),
+            ),
+          ),
+          BlocBuilder<SettingsBloc, SettingsState>(
+            builder: (context, state) {
+              return Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16.0,
+                  vertical: 8.0,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text('Theme', style: TextStyle(fontSize: 16)),
+                    const SizedBox(height: 12),
+                    SizedBox(
+                      width: double.infinity,
+                      child: SegmentedButton<ThemeMode>(
+                        segments: const [
+                          ButtonSegment(
+                            value: ThemeMode.system,
+                            label: Text('System'),
+                            icon: Icon(Icons.brightness_auto),
+                          ),
+                          ButtonSegment(
+                            value: ThemeMode.light,
+                            label: Text('Light'),
+                            icon: Icon(Icons.brightness_5),
+                          ),
+                          ButtonSegment(
+                            value: ThemeMode.dark,
+                            label: Text('Dark'),
+                            icon: Icon(Icons.brightness_2),
+                          ),
+                        ],
+                        selected: {state.themeMode},
+                        onSelectionChanged: (Set<ThemeMode> newSelection) {
+                          context.read<SettingsBloc>().add(
+                            UpdateTheme(newSelection.first),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+          const Divider(),
           const Padding(
             padding: EdgeInsets.all(16.0),
             child: Text(
