@@ -90,32 +90,6 @@ class DashboardPage extends StatelessWidget {
                 ),
 
                 const SizedBox(height: 32),
-
-                Text(
-                  'Quick Actions',
-                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 16),
-
-                Wrap(
-                  spacing: 12,
-                  runSpacing: 12,
-                  children: [
-                    QuickActionButton(
-                      label: 'View All Habits',
-                      icon: Icons.view_list,
-                      onPressed: () => context.go('/habits'),
-                    ),
-                    QuickActionButton(
-                      label: 'Add New Habit',
-                      icon: Icons.add_circle,
-                      onPressed: () => context.go('/habits'),
-                      color: Theme.of(context).colorScheme.tertiary,
-                    ),
-                  ],
-                ),
               ],
             ),
           );
