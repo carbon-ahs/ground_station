@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/di/injection.dart';
+import '../../../../core/presentation/widgets/ground_station_app_bar.dart';
 import '../../domain/entities/habit.dart';
 import '../bloc/habit_bloc.dart';
 import '../bloc/habit_event.dart';
@@ -27,7 +28,7 @@ class HabitsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Ground Station'), centerTitle: true),
+      appBar: const GroundStationAppBar(title: 'Ground Station'),
       body: BlocBuilder<HabitBloc, HabitState>(
         builder: (context, state) {
           if (state.status == HabitStatus.loading) {

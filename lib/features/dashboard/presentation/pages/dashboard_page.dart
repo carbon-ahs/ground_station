@@ -5,6 +5,7 @@ import '../../../habits/presentation/bloc/habit_bloc.dart';
 import '../../../habits/presentation/bloc/habit_state.dart';
 import '../widgets/stats_card.dart';
 import '../widgets/quick_action_button.dart';
+import '../../../../core/presentation/widgets/ground_station_app_bar.dart';
 
 class DashboardPage extends StatelessWidget {
   const DashboardPage({super.key});
@@ -12,7 +13,7 @@ class DashboardPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Ground Station'), centerTitle: true),
+      appBar: const GroundStationAppBar(title: 'Ground Station'),
       body: BlocBuilder<HabitBloc, HabitState>(
         builder: (context, state) {
           final totalHabits = state.habits.length;

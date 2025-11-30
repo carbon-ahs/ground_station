@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import '../../../../core/services/csv_service.dart';
 import '../../../../core/di/injection.dart';
+import '../../../../core/presentation/widgets/ground_station_app_bar.dart';
 import '../../../habits/presentation/bloc/habit_bloc.dart';
 import '../../../habits/presentation/bloc/habit_event.dart';
 import '../bloc/settings_bloc.dart';
@@ -156,7 +157,7 @@ class SettingsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Settings'), centerTitle: true),
+      appBar: const GroundStationAppBar(title: 'Settings'),
       body: ListView(
         children: [
           const Padding(
