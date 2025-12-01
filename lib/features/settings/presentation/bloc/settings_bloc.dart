@@ -7,10 +7,12 @@ import 'settings_state.dart';
 class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
   final SharedPreferences _prefs;
   static const String _themeKey = 'theme_mode';
+  static const String _waterIntakeTargetKey = 'water_intake_target';
 
   SettingsBloc(this._prefs) : super(const SettingsState()) {
     on<LoadSettings>(_onLoadSettings);
     on<UpdateTheme>(_onUpdateTheme);
+    on<UpdateWaterIntakeTarget>(_onUpdateWaterIntakeTarget);
   }
 
   void _onLoadSettings(LoadSettings event, Emitter<SettingsState> emit) {
@@ -22,8 +24,14 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
         themeMode = ThemeMode.values[themeIndex];
       }
 
+      final waterIntakeTarget = _prefs.getInt(_waterIntakeTargetKey) ?? 8;
+
       emit(
-        state.copyWith(status: SettingsStatus.success, themeMode: themeMode),
+        state.copyWith(
+          status: SettingsStatus.success,
+          themeMode: themeMode,
+          waterIntakeTarget: waterIntakeTarget,
+        ),
       );
     } catch (e) {
       emit(
@@ -45,6 +53,28 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
         state.copyWith(
           status: SettingsStatus.success,
           themeMode: event.themeMode,
+        ),
+      );
+    } catch (e) {
+      emit(
+        state.copyWith(
+          status: SettingsStatus.failure,
+          errorMessage: e.toString(),
+        ),
+      );
+    }
+  }
+
+  Future<void> _onUpdateWaterIntakeTarget(
+    UpdateWaterIntakeTarget event,
+    Emitter<SettingsState> emit,
+  ) async {
+    try {
+      await _prefs.setInt(_waterIntakeTargetKey, event.target);
+      emit(
+        state.copyWith(
+          status: SettingsStatus.success,
+          waterIntakeTarget: event.target,
         ),
       );
     } catch (e) {

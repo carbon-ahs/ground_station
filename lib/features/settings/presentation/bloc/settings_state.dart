@@ -6,26 +6,35 @@ enum SettingsStatus { initial, loading, success, failure }
 class SettingsState extends Equatable {
   final SettingsStatus status;
   final ThemeMode themeMode;
+  final int waterIntakeTarget;
   final String? errorMessage;
 
   const SettingsState({
     this.status = SettingsStatus.initial,
     this.themeMode = ThemeMode.system,
+    this.waterIntakeTarget = 8,
     this.errorMessage,
   });
 
   SettingsState copyWith({
     SettingsStatus? status,
     ThemeMode? themeMode,
+    int? waterIntakeTarget,
     String? errorMessage,
   }) {
     return SettingsState(
       status: status ?? this.status,
       themeMode: themeMode ?? this.themeMode,
+      waterIntakeTarget: waterIntakeTarget ?? this.waterIntakeTarget,
       errorMessage: errorMessage,
     );
   }
 
   @override
-  List<Object?> get props => [status, themeMode, errorMessage];
+  List<Object?> get props => [
+    status,
+    themeMode,
+    waterIntakeTarget,
+    errorMessage,
+  ];
 }

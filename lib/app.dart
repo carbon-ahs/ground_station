@@ -6,6 +6,8 @@ import 'core/di/injection.dart';
 import 'features/settings/presentation/bloc/settings_bloc.dart';
 import 'features/settings/presentation/bloc/settings_event.dart';
 import 'features/settings/presentation/bloc/settings_state.dart';
+import 'features/water_intake/presentation/bloc/water_intake_bloc.dart';
+import 'features/water_intake/presentation/bloc/water_intake_event.dart';
 
 class GroundStationApp extends StatelessWidget {
   const GroundStationApp({super.key});
@@ -17,6 +19,9 @@ class GroundStationApp extends StatelessWidget {
       providers: [
         BlocProvider(
           create: (context) => getIt<SettingsBloc>()..add(LoadSettings()),
+        ),
+        BlocProvider(
+          create: (context) => getIt<WaterIntakeBloc>()..add(LoadWaterIntake()),
         ),
       ],
       child: BlocBuilder<SettingsBloc, SettingsState>(

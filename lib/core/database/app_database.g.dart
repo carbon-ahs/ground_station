@@ -76,13 +76,15 @@ class _$AppDatabase extends AppDatabase {
 
   HabitLogDao? _habitLogDaoInstance;
 
+  WaterIntakeDao? _waterIntakeDaoInstance;
+
   Future<sqflite.Database> open(
     String path,
     List<Migration> migrations, [
     Callback? callback,
   ]) async {
     final databaseOptions = sqflite.OpenDatabaseOptions(
-      version: 1,
+      version: 2,
       onConfigure: (database) async {
         await database.execute('PRAGMA foreign_keys = ON');
         await callback?.onConfigure?.call(database);
@@ -101,6 +103,8 @@ class _$AppDatabase extends AppDatabase {
             'CREATE TABLE IF NOT EXISTS `HabitEntity` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `title` TEXT NOT NULL, `description` TEXT NOT NULL, `createdAtMillis` INTEGER NOT NULL)');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `habit_logs` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `habitId` INTEGER NOT NULL, `timestamp` INTEGER NOT NULL, FOREIGN KEY (`habitId`) REFERENCES `HabitEntity` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
+        await database.execute(
+            'CREATE TABLE IF NOT EXISTS `WaterIntakeEntity` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `date` TEXT NOT NULL, `glassCount` INTEGER NOT NULL)');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -116,6 +120,12 @@ class _$AppDatabase extends AppDatabase {
   @override
   HabitLogDao get habitLogDao {
     return _habitLogDaoInstance ??= _$HabitLogDao(database, changeListener);
+  }
+
+  @override
+  WaterIntakeDao get waterIntakeDao {
+    return _waterIntakeDaoInstance ??=
+        _$WaterIntakeDao(database, changeListener);
   }
 }
 
@@ -262,5 +272,80 @@ class _$HabitLogDao extends HabitLogDao {
   @override
   Future<void> deleteLog(HabitLogEntity log) async {
     await _habitLogEntityDeletionAdapter.delete(log);
+  }
+}
+
+class _$WaterIntakeDao extends WaterIntakeDao {
+  _$WaterIntakeDao(
+    this.database,
+    this.changeListener,
+  )   : _queryAdapter = QueryAdapter(database),
+        _waterIntakeEntityInsertionAdapter = InsertionAdapter(
+            database,
+            'WaterIntakeEntity',
+            (WaterIntakeEntity item) => <String, Object?>{
+                  'id': item.id,
+                  'date': item.date,
+                  'glassCount': item.glassCount
+                }),
+        _waterIntakeEntityUpdateAdapter = UpdateAdapter(
+            database,
+            'WaterIntakeEntity',
+            ['id'],
+            (WaterIntakeEntity item) => <String, Object?>{
+                  'id': item.id,
+                  'date': item.date,
+                  'glassCount': item.glassCount
+                });
+
+  final sqflite.DatabaseExecutor database;
+
+  final StreamController<String> changeListener;
+
+  final QueryAdapter _queryAdapter;
+
+  final InsertionAdapter<WaterIntakeEntity> _waterIntakeEntityInsertionAdapter;
+
+  final UpdateAdapter<WaterIntakeEntity> _waterIntakeEntityUpdateAdapter;
+
+  @override
+  Future<WaterIntakeEntity?> getWaterIntakeForDate(String date) async {
+    return _queryAdapter.query(
+        'SELECT * FROM WaterIntakeEntity WHERE date = ?1',
+        mapper: (Map<String, Object?> row) => WaterIntakeEntity(
+            id: row['id'] as int?,
+            date: row['date'] as String,
+            glassCount: row['glassCount'] as int),
+        arguments: [date]);
+  }
+
+  @override
+  Future<void> deleteWaterIntakeForDate(String date) async {
+    await _queryAdapter.queryNoReturn(
+        'DELETE FROM WaterIntakeEntity WHERE date = ?1',
+        arguments: [date]);
+  }
+
+  @override
+  Future<List<WaterIntakeEntity>> getWaterIntakeHistory(int limit) async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM WaterIntakeEntity ORDER BY date DESC LIMIT ?1',
+        mapper: (Map<String, Object?> row) => WaterIntakeEntity(
+            id: row['id'] as int?,
+            date: row['date'] as String,
+            glassCount: row['glassCount'] as int),
+        arguments: [limit]);
+  }
+
+  @override
+  Future<void> insertWaterIntake(WaterIntakeEntity entity) async {
+    await _waterIntakeEntityInsertionAdapter.insert(
+        entity, OnConflictStrategy.replace);
+  }
+
+  @override
+  Future<void> updateWaterIntake(WaterIntakeEntity entity) async {
+    await _waterIntakeEntityUpdateAdapter.update(
+        entity, OnConflictStrategy.abort);
   }
 }

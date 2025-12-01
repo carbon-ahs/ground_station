@@ -3,6 +3,7 @@ import '../../features/splash/presentation/pages/splash_page.dart';
 import '../../features/dashboard/presentation/pages/dashboard_page.dart';
 import '../../features/habits/presentation/pages/habits_page.dart';
 import '../../features/settings/presentation/pages/settings_page.dart';
+import '../../features/water_intake/presentation/pages/water_intake_history_page.dart';
 import '../../features/habits/presentation/bloc/habit_bloc.dart';
 import '../../features/habits/presentation/bloc/habit_event.dart';
 import '../../core/di/injection.dart';
@@ -13,6 +14,10 @@ final appRouter = GoRouter(
   initialLocation: '/',
   routes: [
     GoRoute(path: '/', builder: (context, state) => const SplashPage()),
+    GoRoute(
+      path: '/water-history',
+      builder: (context, state) => const WaterIntakeHistoryPage(),
+    ),
     StatefulShellRoute.indexedStack(
       builder: (context, state, navigationShell) {
         return ScaffoldWithNavBar(navigationShell: navigationShell);

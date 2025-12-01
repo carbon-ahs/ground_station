@@ -6,6 +6,10 @@ import '../../features/habits/data/repositories/habit_repository_impl.dart';
 import '../../features/habits/domain/repositories/habit_repository.dart';
 import '../../features/habits/presentation/bloc/habit_bloc.dart';
 import '../../features/settings/presentation/bloc/settings_bloc.dart';
+import '../../features/water_intake/data/datasources/water_intake_local_data_source.dart';
+import '../../features/water_intake/data/repositories/water_intake_repository_impl.dart';
+import '../../features/water_intake/domain/repositories/water_intake_repository.dart';
+import '../../features/water_intake/presentation/bloc/water_intake_bloc.dart';
 
 final getIt = GetIt.instance;
 
@@ -21,9 +25,17 @@ Future<void> configureDependencies() async {
     () => HabitLocalDataSourceImpl(getIt()),
   );
 
+  getIt.registerLazySingleton<WaterIntakeLocalDataSource>(
+    () => WaterIntakeLocalDataSourceImpl(getIt()),
+  );
+
   // Repositories
   getIt.registerLazySingleton<HabitRepository>(
     () => HabitRepositoryImpl(getIt()),
+  );
+
+  getIt.registerLazySingleton<WaterIntakeRepository>(
+    () => WaterIntakeRepositoryImpl(getIt()),
   );
 
   // External
@@ -33,4 +45,5 @@ Future<void> configureDependencies() async {
   // Blocs
   getIt.registerFactory(() => HabitBloc(habitRepository: getIt()));
   getIt.registerFactory(() => SettingsBloc(getIt()));
+  getIt.registerFactory(() => WaterIntakeBloc(repository: getIt()));
 }

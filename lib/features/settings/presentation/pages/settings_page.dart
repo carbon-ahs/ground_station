@@ -220,6 +220,68 @@ class SettingsPage extends StatelessWidget {
           const Padding(
             padding: EdgeInsets.all(16.0),
             child: Text(
+              'Preferences',
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                color: Colors.grey,
+              ),
+            ),
+          ),
+          BlocBuilder<SettingsBloc, SettingsState>(
+            builder: (context, state) {
+              return Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16.0,
+                  vertical: 8.0,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          'Daily Water Target',
+                          style: TextStyle(fontSize: 16),
+                        ),
+                        Text(
+                          '${state.waterIntakeTarget} glasses',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+                    Slider(
+                      value: state.waterIntakeTarget.toDouble(),
+                      min: 1,
+                      max: 20,
+                      divisions: 19,
+                      label: '${state.waterIntakeTarget} glasses',
+                      onChanged: (value) {
+                        context.read<SettingsBloc>().add(
+                          UpdateWaterIntakeTarget(value.toInt()),
+                        );
+                      },
+                    ),
+                    const SizedBox(height: 4),
+                    const Text(
+                      'Set your daily water intake goal (1-20 glasses)',
+                      style: TextStyle(fontSize: 12, color: Colors.grey),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+          const Divider(),
+          const Padding(
+            padding: EdgeInsets.all(16.0),
+            child: Text(
               'Data Management',
               style: TextStyle(
                 fontSize: 14,

@@ -18,3 +18,12 @@ class UpdateTheme extends SettingsEvent {
   @override
   List<Object> get props => [themeMode];
 }
+
+class UpdateWaterIntakeTarget extends SettingsEvent {
+  final int target;
+
+  const UpdateWaterIntakeTarget(this.target);
+
+  @override
+  List<Object> get props => [target];
+}
