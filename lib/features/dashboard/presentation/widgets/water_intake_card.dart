@@ -40,14 +40,15 @@ class WaterIntakeCard extends StatelessWidget {
                         Row(
                           children: [
                             Container(
-                              padding: const EdgeInsets.all(8),
                               decoration: BoxDecoration(
-                                color: Colors.blue.withOpacity(0.1),
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.primary.withValues(alpha: 0.1),
                                 borderRadius: BorderRadius.circular(12),
                               ),
-                              child: const Icon(
+                              child: Icon(
                                 Icons.water_drop,
-                                color: Colors.blue,
+                                color: Theme.of(context).colorScheme.primary,
                                 size: 24,
                               ),
                             ),
@@ -108,20 +109,6 @@ class WaterIntakeCard extends StatelessWidget {
                             borderRadius: BorderRadius.circular(6),
                           ),
                         ),
-                        AnimatedContainer(
-                          duration: const Duration(milliseconds: 500),
-                          curve: Curves.easeOutCubic,
-                          height: 12,
-                          width:
-                              MediaQuery.of(context).size.width *
-                              (progress.clamp(
-                                0.0,
-                                1.0,
-                              )), // Approximate width calculation, constrained by layout
-                          // Better to use FractionallySizedBox in a real layout context if width is known,
-                          // but inside a Stack with double.infinity width container, we need a layout builder or similar.
-                          // Let's use LayoutBuilder for robustness.
-                        ),
                         LayoutBuilder(
                           builder: (context, constraints) {
                             return Container(
@@ -133,7 +120,11 @@ class WaterIntakeCard extends StatelessWidget {
                                 gradient: LinearGradient(
                                   colors: isGoalReached
                                       ? [Colors.green.shade300, Colors.green]
-                                      : [Colors.blue.shade300, Colors.blue],
+                                      : [
+                                          Theme.of(context).colorScheme.primary
+                                              .withValues(alpha: 0.5),
+                                          Theme.of(context).colorScheme.primary,
+                                        ],
                                 ),
                                 borderRadius: BorderRadius.circular(6),
                                 boxShadow: [
@@ -141,8 +132,10 @@ class WaterIntakeCard extends StatelessWidget {
                                     color:
                                         (isGoalReached
                                                 ? Colors.green
-                                                : Colors.blue)
-                                            .withOpacity(0.4),
+                                                : Theme.of(
+                                                    context,
+                                                  ).colorScheme.primary)
+                                            .withValues(alpha: 0.4),
                                     blurRadius: 6,
                                     offset: const Offset(0, 2),
                                   ),

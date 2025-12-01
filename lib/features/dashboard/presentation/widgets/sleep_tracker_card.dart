@@ -39,14 +39,15 @@ class SleepTrackerCard extends StatelessWidget {
                         Row(
                           children: [
                             Container(
-                              padding: const EdgeInsets.all(8),
                               decoration: BoxDecoration(
-                                color: Colors.deepPurple.withOpacity(0.1),
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.primary.withValues(alpha: 0.1),
                                 borderRadius: BorderRadius.circular(12),
                               ),
-                              child: const Icon(
+                              child: Icon(
                                 Icons.bedtime,
-                                color: Colors.deepPurple,
+                                color: Theme.of(context).colorScheme.primary,
                                 size: 24,
                               ),
                             ),
@@ -121,8 +122,9 @@ class SleepTrackerCard extends StatelessWidget {
                                   colors: isGoalReached
                                       ? [Colors.green.shade300, Colors.green]
                                       : [
-                                          Colors.deepPurple.shade300,
-                                          Colors.deepPurple,
+                                          Theme.of(context).colorScheme.primary
+                                              .withValues(alpha: 0.5),
+                                          Theme.of(context).colorScheme.primary,
                                         ],
                                 ),
                                 borderRadius: BorderRadius.circular(6),
@@ -131,8 +133,10 @@ class SleepTrackerCard extends StatelessWidget {
                                     color:
                                         (isGoalReached
                                                 ? Colors.green
-                                                : Colors.deepPurple)
-                                            .withOpacity(0.4),
+                                                : Theme.of(
+                                                    context,
+                                                  ).colorScheme.primary)
+                                            .withValues(alpha: 0.4),
                                     blurRadius: 6,
                                     offset: const Offset(0, 2),
                                   ),
@@ -186,8 +190,12 @@ class SleepTrackerCard extends StatelessWidget {
                             icon: const Icon(Icons.add),
                             label: const Text('Add 1 Hour'),
                             style: FilledButton.styleFrom(
-                              backgroundColor: Colors.deepPurple,
-                              foregroundColor: Colors.white,
+                              backgroundColor: Theme.of(
+                                context,
+                              ).colorScheme.primary,
+                              foregroundColor: Theme.of(
+                                context,
+                              ).colorScheme.onPrimary,
                               padding: const EdgeInsets.symmetric(vertical: 16),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),

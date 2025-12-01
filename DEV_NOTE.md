@@ -2,4 +2,4 @@ i want to add a fix habit, drink 8 glass of water per day. i may change this 8 i
 
 
 --- 
-json data export import not working. also hydration card and sleep card not is not consistant in colors. They are not matching with theme. also sleep card btn color not working in dark mode. also i need daily_focas history ui. 
+json data export import not working. also hydration card and sleep card not is not consistant in colors. They are not matching with theme. also sleep card btn color not working in dark mode. also i need daily_focas history ui. There is no edit option on daily focus . 
