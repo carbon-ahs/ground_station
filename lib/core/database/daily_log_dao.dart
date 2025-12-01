@@ -29,4 +29,7 @@ abstract class DailyLogDao {
 
   @Query('DELETE FROM daily_notes WHERE id = :id')
   Future<void> deleteNoteById(int id);
+
+  @Query('UPDATE daily_notes SET content = :content WHERE id = :id')
+  Future<void> updateNoteContent(int id, String content);
 }

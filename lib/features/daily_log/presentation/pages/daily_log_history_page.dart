@@ -43,42 +43,85 @@ class DailyLogHistoryPage extends StatelessWidget {
             );
           }
 
-          // Sort history by date descending
-          final sortedHistory = List.of(state.history)
-            ..sort((a, b) => b.date.compareTo(a.date));
-
           return ListView.builder(
             padding: const EdgeInsets.all(16),
-            itemCount: sortedHistory.length,
+            itemCount: state.history.length,
             itemBuilder: (context, index) {
-              final log = sortedHistory[index];
+              final item = state.history[index];
+              final log = item.log;
+              final notes = item.notes;
               final date = DateTime.parse(log.date);
-              final formattedDate = DateFormat.yMMMd().format(date);
+              final dateStr = DateFormat('EEEE, MMMM d, y').format(date);
 
               return Card(
-                margin: const EdgeInsets.only(bottom: 12),
-                child: ListTile(
-                  leading: CircleAvatar(
-                    backgroundColor: log.mitCompleted
-                        ? Colors.green.withValues(alpha: 0.1)
-                        : Colors.orange.withValues(alpha: 0.1),
-                    child: Icon(
-                      log.mitCompleted ? Icons.check : Icons.priority_high,
-                      color: log.mitCompleted ? Colors.green : Colors.orange,
-                    ),
+                margin: const EdgeInsets.only(bottom: 16),
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        dateStr,
+                        style: Theme.of(context).textTheme.titleMedium
+                            ?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
+                      ),
+                      const Divider(),
+                      const SizedBox(height: 8),
+                      Row(
+                        children: [
+                          Icon(
+                            log.mitCompleted
+                                ? Icons.check_circle
+                                : Icons.radio_button_unchecked,
+                            color: log.mitCompleted
+                                ? Colors.green
+                                : Colors.grey,
+                            size: 20,
+                          ),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              (log.mitTitle?.isNotEmpty ?? false)
+                                  ? log.mitTitle!
+                                  : 'No main goal set',
+                              style: TextStyle(
+                                decoration: log.mitCompleted
+                                    ? TextDecoration.lineThrough
+                                    : null,
+                                color: log.mitCompleted ? Colors.grey : null,
+                                fontStyle: (log.mitTitle?.isEmpty ?? true)
+                                    ? FontStyle.italic
+                                    : null,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      if (notes.isNotEmpty) ...[
+                        const SizedBox(height: 12),
+                        Text(
+                          'Notes:',
+                          style: Theme.of(context).textTheme.labelMedium,
+                        ),
+                        const SizedBox(height: 4),
+                        ...notes.map(
+                          (note) => Padding(
+                            padding: const EdgeInsets.only(left: 8, bottom: 4),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text('• '),
+                                Expanded(child: Text(note.content)),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ],
                   ),
-                  title: Text(
-                    (log.mitTitle ?? '').isNotEmpty
-                        ? log.mitTitle!
-                        : 'No MIT set',
-                    style: TextStyle(
-                      decoration: log.mitCompleted
-                          ? TextDecoration.lineThrough
-                          : null,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  subtitle: Text(formattedDate),
                 ),
               );
             },

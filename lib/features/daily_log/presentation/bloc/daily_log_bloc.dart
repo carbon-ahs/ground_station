@@ -15,6 +15,7 @@ class DailyLogBloc extends Bloc<DailyLogEvent, DailyLogState>
     on<SetMIT>(_onSetMIT);
     on<ToggleMIT>(_onToggleMIT);
     on<AddNote>(_onAddNote);
+    on<EditNote>(_onEditNote);
     on<DeleteNote>(_onDeleteNote);
 
     WidgetsBinding.instance.addObserver(this);
@@ -106,6 +107,20 @@ class DailyLogBloc extends Bloc<DailyLogEvent, DailyLogState>
     }
   }
 
+  Future<void> _onEditNote(EditNote event, Emitter<DailyLogState> emit) async {
+    try {
+      await repository.editNote(event.noteId, event.content);
+      add(const LoadDailyLog());
+    } catch (e) {
+      emit(
+        state.copyWith(
+          status: DailyLogStatus.failure,
+          errorMessage: e.toString(),
+        ),
+      );
+    }
+  }
+
   Future<void> _onDeleteNote(
     DeleteNote event,
     Emitter<DailyLogState> emit,
@@ -129,7 +144,7 @@ class DailyLogBloc extends Bloc<DailyLogEvent, DailyLogState>
   ) async {
     try {
       emit(state.copyWith(status: DailyLogStatus.loading));
-      final history = await repository.getAllLogs();
+      final history = await repository.getHistory();
       emit(state.copyWith(status: DailyLogStatus.success, history: history));
     } catch (e) {
       emit(

@@ -540,6 +540,16 @@ class _$DailyLogDao extends DailyLogDao {
   }
 
   @override
+  Future<void> updateNoteContent(
+    int id,
+    String content,
+  ) async {
+    await _queryAdapter.queryNoReturn(
+        'UPDATE daily_notes SET content = ?2 WHERE id = ?1',
+        arguments: [id, content]);
+  }
+
+  @override
   Future<int> insertLog(DailyLogEntity log) {
     return _dailyLogEntityInsertionAdapter.insertAndReturnId(
         log, OnConflictStrategy.replace);

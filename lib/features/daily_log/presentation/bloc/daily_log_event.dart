@@ -39,6 +39,15 @@ class AddNote extends DailyLogEvent {
   List<Object?> get props => [content];
 }
 
+class EditNote extends DailyLogEvent {
+  final int noteId;
+  final String content;
+  const EditNote(this.noteId, this.content);
+
+  @override
+  List<Object?> get props => [noteId, content];
+}
+
 class DeleteNote extends DailyLogEvent {
   final int noteId;
   const DeleteNote(this.noteId);

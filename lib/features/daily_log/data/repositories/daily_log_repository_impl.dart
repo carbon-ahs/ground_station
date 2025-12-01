@@ -3,6 +3,7 @@ import '../../../../core/database/app_database.dart';
 import '../../data/models/daily_log_entity.dart';
 import '../../data/models/daily_note_entity.dart';
 import '../../domain/repositories/daily_log_repository.dart';
+import '../../domain/entities/daily_log_history_item.dart';
 
 class DailyLogRepositoryImpl implements DailyLogRepository {
   final AppDatabase _database;
@@ -71,6 +72,11 @@ class DailyLogRepositoryImpl implements DailyLogRepository {
   }
 
   @override
+  Future<void> editNote(int noteId, String content) async {
+    await _database.dailyLogDao.updateNoteContent(noteId, content);
+  }
+
+  @override
   Future<void> deleteNote(int noteId) async {
     await _database.dailyLogDao.deleteNoteById(noteId);
   }
@@ -81,7 +87,15 @@ class DailyLogRepositoryImpl implements DailyLogRepository {
   }
 
   @override
-  Future<List<DailyLogEntity>> getAllLogs() async {
-    return await _database.dailyLogDao.getAllLogs();
+  Future<List<DailyLogHistoryItem>> getHistory() async {
+    final logs = await _database.dailyLogDao.getAllLogs();
+    final List<DailyLogHistoryItem> history = [];
+
+    for (var log in logs) {
+      final notes = await _database.dailyLogDao.getNotesForLog(log.id!);
+      history.add(DailyLogHistoryItem(log: log, notes: notes));
+    }
+
+    return history;
   }
 }

@@ -1,83 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ground_station/features/daily_log/presentation/bloc/daily_log_bloc.dart';
-import 'package:ground_station/features/daily_log/presentation/bloc/daily_log_event.dart';
-import 'package:ground_station/features/daily_log/presentation/bloc/daily_log_state.dart';
 import 'package:go_router/go_router.dart';
+import '../../../daily_log/data/models/daily_note_entity.dart';
+import '../../../daily_log/presentation/bloc/daily_log_bloc.dart';
+import '../../../daily_log/presentation/bloc/daily_log_event.dart';
+import '../../../daily_log/presentation/bloc/daily_log_state.dart';
 
 class DailyLogCard extends StatelessWidget {
   const DailyLogCard({super.key});
-
-  void _showSetMITDialog(BuildContext context, String? currentTitle) {
-    final controller = TextEditingController(text: currentTitle);
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Set Most Important Task'),
-        content: TextField(
-          controller: controller,
-          decoration: const InputDecoration(
-            hintText: 'What is your main focus today?',
-            border: OutlineInputBorder(),
-          ),
-          autofocus: true,
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
-          FilledButton(
-            onPressed: () {
-              if (controller.text.trim().isNotEmpty) {
-                context.read<DailyLogBloc>().add(
-                  SetMIT(controller.text.trim()),
-                );
-                Navigator.pop(context);
-              }
-            },
-            child: const Text('Save'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _showAddNoteDialog(BuildContext context) {
-    final controller = TextEditingController();
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Add Note'),
-        content: TextField(
-          controller: controller,
-          decoration: const InputDecoration(
-            hintText: 'Enter your note...',
-            border: OutlineInputBorder(),
-          ),
-          autofocus: true,
-          maxLines: 3,
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
-          FilledButton(
-            onPressed: () {
-              if (controller.text.trim().isNotEmpty) {
-                context.read<DailyLogBloc>().add(
-                  AddNote(controller.text.trim()),
-                );
-                Navigator.pop(context);
-              }
-            },
-            child: const Text('Add'),
-          ),
-        ],
-      ),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -145,11 +75,17 @@ class DailyLogCard extends StatelessWidget {
                       ),
                       child: Row(
                         children: [
-                          Icon(Icons.add, color: Colors.grey[600], size: 20),
+                          Icon(
+                            Icons.add_circle_outline,
+                            color: Colors.grey[400],
+                          ),
                           const SizedBox(width: 8),
                           Text(
-                            'Set your MIT for today',
-                            style: TextStyle(color: Colors.grey[600]),
+                            'Set today\'s main goal',
+                            style: TextStyle(
+                              color: Colors.grey[500],
+                              fontSize: 16,
+                            ),
                           ),
                         ],
                       ),
@@ -203,22 +139,24 @@ class DailyLogCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Daily Notes',
+                      'Notes',
                       style: Theme.of(
                         context,
                       ).textTheme.labelLarge?.copyWith(color: Colors.grey[600]),
                     ),
-                    IconButton(
-                      onPressed: () => _showAddNoteDialog(context),
-                      icon: const Icon(Icons.add_circle_outline),
-                      tooltip: 'Add Note',
-                      visualDensity: VisualDensity.compact,
+                    TextButton.icon(
+                      onPressed: () => _showNoteDialog(context),
+                      icon: const Icon(Icons.add, size: 18),
+                      label: const Text('Add Note'),
+                      style: TextButton.styleFrom(
+                        visualDensity: VisualDensity.compact,
+                      ),
                     ),
                   ],
                 ),
                 if (notes.isEmpty)
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
                     child: Text(
                       'No notes yet',
                       style: TextStyle(
@@ -239,13 +177,25 @@ class DailyLogCard extends StatelessWidget {
                       return ListTile(
                         contentPadding: EdgeInsets.zero,
                         title: Text(note.content),
-                        trailing: IconButton(
-                          icon: const Icon(Icons.close, size: 18),
-                          onPressed: () {
-                            context.read<DailyLogBloc>().add(
-                              DeleteNote(note.id!),
-                            );
-                          },
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                              icon: const Icon(Icons.edit, size: 18),
+                              onPressed: () =>
+                                  _showNoteDialog(context, note: note),
+                              tooltip: 'Edit Note',
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.close, size: 18),
+                              onPressed: () {
+                                context.read<DailyLogBloc>().add(
+                                  DeleteNote(note.id!),
+                                );
+                              },
+                              tooltip: 'Delete Note',
+                            ),
+                          ],
                         ),
                       );
                     },
@@ -255,6 +205,87 @@ class DailyLogCard extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+
+  Future<void> _showSetMITDialog(BuildContext context, String? currentTitle) {
+    final controller = TextEditingController(text: currentTitle);
+    return showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text(currentTitle == null ? 'Set Main Goal' : 'Edit Main Goal'),
+        content: TextField(
+          controller: controller,
+          decoration: const InputDecoration(
+            hintText: 'What is your most important task?',
+            border: OutlineInputBorder(),
+          ),
+          autofocus: true,
+          textCapitalization: TextCapitalization.sentences,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            onPressed: () {
+              if (controller.text.trim().isNotEmpty) {
+                context.read<DailyLogBloc>().add(
+                  SetMIT(controller.text.trim()),
+                );
+                Navigator.pop(dialogContext);
+              }
+            },
+            child: const Text('Save'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _showNoteDialog(BuildContext context, {DailyNoteEntity? note}) {
+    final controller = TextEditingController(text: note?.content);
+    final isEditing = note != null;
+
+    return showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text(isEditing ? 'Edit Note' : 'Add Note'),
+        content: TextField(
+          controller: controller,
+          decoration: const InputDecoration(
+            hintText: 'Enter your note...',
+            border: OutlineInputBorder(),
+          ),
+          autofocus: true,
+          textCapitalization: TextCapitalization.sentences,
+          maxLines: 3,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            onPressed: () {
+              if (controller.text.trim().isNotEmpty) {
+                if (isEditing) {
+                  context.read<DailyLogBloc>().add(
+                    EditNote(note.id!, controller.text.trim()),
+                  );
+                } else {
+                  context.read<DailyLogBloc>().add(
+                    AddNote(controller.text.trim()),
+                  );
+                }
+                Navigator.pop(dialogContext);
+              }
+            },
+            child: const Text('Save'),
+          ),
+        ],
+      ),
     );
   }
 }
