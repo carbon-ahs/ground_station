@@ -79,4 +79,9 @@ class DailyLogRepositoryImpl implements DailyLogRepository {
   Future<List<DailyNoteEntity>> getNotesForLog(int logId) async {
     return await _database.dailyLogDao.getNotesForLog(logId);
   }
+
+  @override
+  Future<List<DailyLogEntity>> getAllLogs() async {
+    return await _database.dailyLogDao.getAllLogs();
+  }
 }

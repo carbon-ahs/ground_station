@@ -10,7 +10,7 @@ abstract class HabitDao {
   Future<HabitEntity?> findHabitById(int id);
 
   @insert
-  Future<void> insertHabit(HabitEntity habit);
+  Future<int> insertHabit(HabitEntity habit);
 
   @update
   Future<void> updateHabit(HabitEntity habit);

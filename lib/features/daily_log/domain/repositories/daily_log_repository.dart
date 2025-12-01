@@ -8,4 +8,5 @@ abstract class DailyLogRepository {
   Future<void> addNote(DateTime date, String content);
   Future<void> deleteNote(int noteId);
   Future<List<DailyNoteEntity>> getNotesForLog(int logId);
+  Future<List<DailyLogEntity>> getAllLogs();
 }

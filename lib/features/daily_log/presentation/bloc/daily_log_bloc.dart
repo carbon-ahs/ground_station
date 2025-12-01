@@ -11,6 +11,7 @@ class DailyLogBloc extends Bloc<DailyLogEvent, DailyLogState>
 
   DailyLogBloc({required this.repository}) : super(const DailyLogState()) {
     on<LoadDailyLog>(_onLoadDailyLog);
+    on<LoadDailyLogHistory>(_onLoadDailyLogHistory);
     on<SetMIT>(_onSetMIT);
     on<ToggleMIT>(_onToggleMIT);
     on<AddNote>(_onAddNote);
@@ -112,6 +113,24 @@ class DailyLogBloc extends Bloc<DailyLogEvent, DailyLogState>
     try {
       await repository.deleteNote(event.noteId);
       add(const LoadDailyLog());
+    } catch (e) {
+      emit(
+        state.copyWith(
+          status: DailyLogStatus.failure,
+          errorMessage: e.toString(),
+        ),
+      );
+    }
+  }
+
+  Future<void> _onLoadDailyLogHistory(
+    LoadDailyLogHistory event,
+    Emitter<DailyLogState> emit,
+  ) async {
+    try {
+      emit(state.copyWith(status: DailyLogStatus.loading));
+      final history = await repository.getAllLogs();
+      emit(state.copyWith(status: DailyLogStatus.success, history: history));
     } catch (e) {
       emit(
         state.copyWith(

@@ -11,6 +11,10 @@ class LoadDailyLog extends DailyLogEvent {
   const LoadDailyLog();
 }
 
+class LoadDailyLogHistory extends DailyLogEvent {
+  const LoadDailyLogHistory();
+}
+
 class SetMIT extends DailyLogEvent {
   final String title;
   const SetMIT(this.title);

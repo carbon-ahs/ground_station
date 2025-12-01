@@ -218,8 +218,9 @@ class _$HabitDao extends HabitDao {
   }
 
   @override
-  Future<void> insertHabit(HabitEntity habit) async {
-    await _habitEntityInsertionAdapter.insert(habit, OnConflictStrategy.abort);
+  Future<int> insertHabit(HabitEntity habit) {
+    return _habitEntityInsertionAdapter.insertAndReturnId(
+        habit, OnConflictStrategy.abort);
   }
 
   @override

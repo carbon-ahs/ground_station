@@ -69,76 +69,76 @@ class DataExportService {
     return file.path;
   }
 
-  // Future<void> importDataFromJSON(String filePath) async {
-  //   final file = File(filePath);
-  //   final jsonString = await file.readAsString();
-  //   final Map<String, dynamic> data = jsonDecode(jsonString);
+  Future<void> importDataFromJSON(String filePath) async {
+    final file = File(filePath);
+    final jsonString = await file.readAsString();
+    final Map<String, dynamic> data = jsonDecode(jsonString);
 
-  //   // 1. Import Habits
-  //   final habits = (data['habits'] as List).cast<Map<String, dynamic>>();
-  //   for (var h in habits) {
-  //     final habit = HabitEntity(
-  //       title: h['title'],
-  //       description: h['description'],
-  //       createdAtMillis: h['created_at'],
-  //     );
+    // 1. Import Habits
+    final habits = (data['habits'] as List).cast<Map<String, dynamic>>();
+    for (var h in habits) {
+      final habit = HabitEntity(
+        title: h['title'],
+        description: h['description'],
+        createdAtMillis: h['created_at'],
+      );
 
-  //     final oldId = h['id'];
-  //     final newId = await habitDataSource.addHabit(habit);
+      final oldId = h['id'];
+      final newId = await habitDataSource.addHabit(habit);
 
-  //     // 2. Import Habit Logs for this habit
-  //     final allLogs = (data['habit_logs'] as List).cast<Map<String, dynamic>>();
-  //     final logsForHabit = allLogs.where((l) => l['habit_id'] == oldId);
+      // 2. Import Habit Logs for this habit
+      final allLogs = (data['habit_logs'] as List).cast<Map<String, dynamic>>();
+      final logsForHabit = allLogs.where((l) => l['habit_id'] == oldId);
 
-  //     for (var logData in logsForHabit) {
-  //       await habitDataSource.addHabitLog(
-  //         HabitLogEntity(habitId: newId, timestamp: logData['timestamp']),
-  //       );
-  //     }
-  //   }
+      for (var logData in logsForHabit) {
+        await habitDataSource.addHabitLog(
+          HabitLogEntity(habitId: newId, timestamp: logData['timestamp']),
+        );
+      }
+    }
 
-  //   // 3. Import Daily Logs
-  //   if (data.containsKey('daily_logs')) {
-  //     final dailyLogs = (data['daily_logs'] as List)
-  //         .cast<Map<String, dynamic>>();
-  //     for (var logData in dailyLogs) {
-  //       final date = logData['date'];
+    // 3. Import Daily Logs
+    if (data.containsKey('daily_logs')) {
+      final dailyLogs = (data['daily_logs'] as List)
+          .cast<Map<String, dynamic>>();
+      for (var logData in dailyLogs) {
+        final date = logData['date'];
 
-  //       var existingLog = await database.dailyLogDao.getLogForDate(date);
-  //       int logId;
+        var existingLog = await database.dailyLogDao.getLogForDate(date);
+        int logId;
 
-  //       if (existingLog != null) {
-  //         logId = existingLog.id!;
-  //         if (logData['mit_title'] != null) {
-  //           await database.dailyLogDao.updateLog(
-  //             DailyLogEntity(
-  //               id: logId,
-  //               date: date,
-  //               mitTitle: logData['mit_title'],
-  //               mitCompleted: logData['mit_completed'] ?? false,
-  //             ),
-  //           );
-  //         }
-  //       } else {
-  //         logId = await database.dailyLogDao.insertLog(
-  //           DailyLogEntity(
-  //             date: date,
-  //             mitTitle: logData['mit_title'],
-  //             mitCompleted: logData['mit_completed'] ?? false,
-  //           ),
-  //         );
-  //       }
+        if (existingLog != null) {
+          logId = existingLog.id!;
+          if (logData['mit_title'] != null) {
+            await database.dailyLogDao.updateLog(
+              DailyLogEntity(
+                id: logId,
+                date: date,
+                mitTitle: logData['mit_title'],
+                mitCompleted: logData['mit_completed'] ?? false,
+              ),
+            );
+          }
+        } else {
+          logId = await database.dailyLogDao.insertLog(
+            DailyLogEntity(
+              date: date,
+              mitTitle: logData['mit_title'],
+              mitCompleted: logData['mit_completed'] ?? false,
+            ),
+          );
+        }
 
-  //       // Import Notes
-  //       if (logData['notes'] != null) {
-  //         final notes = (logData['notes'] as List).cast<String>();
-  //         for (var content in notes) {
-  //           await database.dailyLogDao.insertNote(
-  //             DailyNoteEntity(dailyLogId: logId, content: content),
-  //           );
-  //         }
-  //       }
-  //     }
-  //   }
-  // }
+        // Import Notes
+        if (logData['notes'] != null) {
+          final notes = (logData['notes'] as List).cast<String>();
+          for (var content in notes) {
+            await database.dailyLogDao.insertNote(
+              DailyNoteEntity(dailyLogId: logId, content: content),
+            );
+          }
+        }
+      }
+    }
+  }
 }

@@ -7,6 +7,7 @@ import '../../features/habits/presentation/pages/habits_page.dart';
 import '../../features/settings/presentation/pages/settings_page.dart';
 import '../../features/water_intake/presentation/pages/water_intake_history_page.dart';
 import '../../features/sleep/presentation/pages/sleep_history_page.dart';
+import '../../features/daily_log/presentation/pages/daily_log_history_page.dart';
 import '../../features/habits/presentation/bloc/habit_bloc.dart';
 import '../../features/habits/presentation/bloc/habit_event.dart';
 import '../../core/di/injection.dart';
@@ -27,6 +28,10 @@ final appRouter = GoRouter(
     GoRoute(
       path: '/sleep-history',
       builder: (context, state) => const SleepHistoryPage(),
+    ),
+    GoRoute(
+      path: '/daily-log-history',
+      builder: (context, state) => const DailyLogHistoryPage(),
     ),
     StatefulShellRoute.indexedStack(
       builder: (context, state, navigationShell) {

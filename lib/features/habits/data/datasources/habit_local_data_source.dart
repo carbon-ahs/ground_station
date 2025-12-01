@@ -4,7 +4,7 @@ import '../../data/models/habit_log_entity.dart';
 
 abstract class HabitLocalDataSource {
   Future<List<HabitEntity>> getHabits();
-  Future<void> addHabit(HabitEntity habit);
+  Future<int> addHabit(HabitEntity habit);
   Future<void> updateHabit(HabitEntity habit);
   Future<void> deleteHabit(int id);
   Future<List<HabitLogEntity>> getHabitLogs(int habitId);
@@ -21,7 +21,7 @@ class HabitLocalDataSourceImpl implements HabitLocalDataSource {
   Future<List<HabitEntity>> getHabits() => database.habitDao.findAllHabits();
 
   @override
-  Future<void> addHabit(HabitEntity habit) =>
+  Future<int> addHabit(HabitEntity habit) =>
       database.habitDao.insertHabit(habit);
 
   @override

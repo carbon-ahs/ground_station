@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ground_station/features/daily_log/presentation/bloc/daily_log_bloc.dart';
 import 'package:ground_station/features/daily_log/presentation/bloc/daily_log_event.dart';
 import 'package:ground_station/features/daily_log/presentation/bloc/daily_log_state.dart';
+import 'package:go_router/go_router.dart';
 
 class DailyLogCard extends StatelessWidget {
   const DailyLogCard({super.key});
@@ -97,17 +98,26 @@ class DailyLogCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Icon(
-                      Icons.today,
-                      color: Theme.of(context).colorScheme.primary,
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.today,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          'Daily Focus',
+                          style: Theme.of(context).textTheme.titleLarge
+                              ?.copyWith(fontWeight: FontWeight.bold),
+                        ),
+                      ],
                     ),
-                    const SizedBox(width: 8),
-                    Text(
-                      'Daily Focus',
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                    IconButton(
+                      onPressed: () => context.push('/daily-log-history'),
+                      icon: const Icon(Icons.history),
+                      tooltip: 'View History',
                     ),
                   ],
                 ),
@@ -176,6 +186,11 @@ class DailyLogCard extends StatelessWidget {
                               color: mitCompleted ? Colors.grey : null,
                             ),
                           ),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.edit, size: 20),
+                          onPressed: () => _showSetMITDialog(context, mitTitle),
+                          tooltip: 'Edit MIT',
                         ),
                       ],
                     ),
