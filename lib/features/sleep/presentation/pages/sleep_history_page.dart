@@ -5,27 +5,27 @@ import '../../../../core/presentation/widgets/ground_station_app_bar.dart';
 import '../../../../core/presentation/widgets/weekly_bar_chart.dart';
 import '../../../settings/presentation/bloc/settings_bloc.dart';
 import '../../../settings/presentation/bloc/settings_state.dart';
-import '../bloc/water_intake_bloc.dart';
-import '../bloc/water_intake_event.dart';
-import '../bloc/water_intake_state.dart';
-import '../../domain/entities/water_intake.dart';
+import '../bloc/sleep_bloc.dart';
+import '../bloc/sleep_event.dart';
+import '../bloc/sleep_state.dart';
+import '../../domain/entities/sleep_record.dart';
 
-class WaterIntakeHistoryPage extends StatefulWidget {
-  const WaterIntakeHistoryPage({super.key});
+class SleepHistoryPage extends StatefulWidget {
+  const SleepHistoryPage({super.key});
 
   @override
-  State<WaterIntakeHistoryPage> createState() => _WaterIntakeHistoryPageState();
+  State<SleepHistoryPage> createState() => _SleepHistoryPageState();
 }
 
-class _WaterIntakeHistoryPageState extends State<WaterIntakeHistoryPage> {
+class _SleepHistoryPageState extends State<SleepHistoryPage> {
   @override
   void initState() {
     super.initState();
-    context.read<WaterIntakeBloc>().add(const LoadWaterIntakeHistory());
+    context.read<SleepBloc>().add(const LoadSleepHistory());
   }
 
   // Helper to get last 7 days data
-  Map<String, dynamic> _getWeeklyData(List<WaterIntake> history) {
+  Map<String, dynamic> _getWeeklyData(List<SleepRecord> history) {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
 
@@ -41,9 +41,9 @@ class _WaterIntakeHistoryPageState extends State<WaterIntakeHistoryPage> {
       final record = history.firstWhere((h) {
         final hDate = DateTime(h.date.year, h.date.month, h.date.day);
         return hDate.isAtSameMomentAs(date);
-      }, orElse: () => WaterIntake(id: null, date: date, glassCount: 0));
+      }, orElse: () => SleepRecord(id: null, date: date, hours: 0.0));
 
-      values.add(record.glassCount.toDouble());
+      values.add(record.hours);
     }
 
     return {'values': values, 'dates': dates};
@@ -52,33 +52,33 @@ class _WaterIntakeHistoryPageState extends State<WaterIntakeHistoryPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const GroundStationAppBar(title: 'Water Intake History'),
+      appBar: const GroundStationAppBar(title: 'Sleep History'),
       body: BlocBuilder<SettingsBloc, SettingsState>(
         builder: (context, settingsState) {
-          final target = settingsState.waterIntakeTarget;
+          final target = settingsState.sleepTarget;
 
-          return BlocBuilder<WaterIntakeBloc, WaterIntakeState>(
-            builder: (context, intakeState) {
-              if (intakeState.history.isEmpty) {
+          return BlocBuilder<SleepBloc, SleepState>(
+            builder: (context, sleepState) {
+              if (sleepState.history.isEmpty) {
                 return Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(
-                        Icons.water_drop_outlined,
+                        Icons.bedtime_outlined,
                         size: 64,
                         color: Colors.grey[400],
                       ),
                       const SizedBox(height: 16),
                       Text(
-                        'No water intake history yet',
+                        'No sleep history yet',
                         style: Theme.of(context).textTheme.titleLarge?.copyWith(
                           color: Colors.grey[600],
                         ),
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        'Start tracking your daily water intake!',
+                        'Start tracking your sleep!',
                         style: TextStyle(color: Colors.grey[500]),
                       ),
                     ],
@@ -86,7 +86,7 @@ class _WaterIntakeHistoryPageState extends State<WaterIntakeHistoryPage> {
                 );
               }
 
-              final weeklyData = _getWeeklyData(intakeState.history);
+              final weeklyData = _getWeeklyData(sleepState.history);
 
               return ListView(
                 padding: const EdgeInsets.all(16),
@@ -95,9 +95,9 @@ class _WaterIntakeHistoryPageState extends State<WaterIntakeHistoryPage> {
                   WeeklyBarChart(
                     weeklyValues: weeklyData['values'] as List<double>,
                     dates: weeklyData['dates'] as List<DateTime>,
-                    target: target.toDouble(),
-                    barColor: Colors.blue,
-                    unit: 'glasses',
+                    target: target,
+                    barColor: Colors.deepPurple,
+                    unit: 'hours',
                   ),
                   const SizedBox(height: 24),
 
@@ -110,15 +110,15 @@ class _WaterIntakeHistoryPageState extends State<WaterIntakeHistoryPage> {
                   const SizedBox(height: 12),
 
                   // History List
-                  ...intakeState.history.map((intake) {
+                  ...sleepState.history.map((record) {
                     final dateStr = DateFormat(
                       'MMM dd, yyyy',
-                    ).format(intake.date);
+                    ).format(record.date);
                     final isToday =
-                        DateFormat('yyyy-MM-dd').format(intake.date) ==
+                        DateFormat('yyyy-MM-dd').format(record.date) ==
                         DateFormat('yyyy-MM-dd').format(DateTime.now());
-                    final progress = intake.glassCount / target;
-                    final achieved = intake.glassCount >= target;
+                    final progress = record.hours / target;
+                    final achieved = record.hours >= target;
 
                     return Card(
                       margin: const EdgeInsets.only(bottom: 12),
@@ -127,10 +127,10 @@ class _WaterIntakeHistoryPageState extends State<WaterIntakeHistoryPage> {
                         leading: CircleAvatar(
                           backgroundColor: achieved
                               ? Colors.green.withOpacity(0.2)
-                              : Colors.blue.withOpacity(0.2),
+                              : Colors.deepPurple.withOpacity(0.2),
                           child: Icon(
-                            achieved ? Icons.check_circle : Icons.water_drop,
-                            color: achieved ? Colors.green : Colors.blue,
+                            achieved ? Icons.check_circle : Icons.bedtime,
+                            color: achieved ? Colors.green : Colors.deepPurple,
                           ),
                         ),
                         title: Row(
@@ -173,7 +173,7 @@ class _WaterIntakeHistoryPageState extends State<WaterIntakeHistoryPage> {
                           children: [
                             const SizedBox(height: 8),
                             Text(
-                              '${intake.glassCount} / $target glasses',
+                              '${record.hours.toStringAsFixed(1).replaceAll(RegExp(r'\.0$'), '')} / ${target.toStringAsFixed(1).replaceAll(RegExp(r'\.0$'), '')} hours',
                               style: const TextStyle(fontSize: 16),
                             ),
                             const SizedBox(height: 8),
@@ -184,7 +184,7 @@ class _WaterIntakeHistoryPageState extends State<WaterIntakeHistoryPage> {
                                 minHeight: 8,
                                 backgroundColor: Colors.grey[200],
                                 valueColor: AlwaysStoppedAnimation<Color>(
-                                  achieved ? Colors.green : Colors.blue,
+                                  achieved ? Colors.green : Colors.deepPurple,
                                 ),
                               ),
                             ),
@@ -195,7 +195,7 @@ class _WaterIntakeHistoryPageState extends State<WaterIntakeHistoryPage> {
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
-                            color: achieved ? Colors.green : Colors.blue,
+                            color: achieved ? Colors.green : Colors.deepPurple,
                           ),
                         ),
                       ),

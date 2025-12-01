@@ -8,11 +8,12 @@ import 'features/settings/presentation/bloc/settings_event.dart';
 import 'features/settings/presentation/bloc/settings_state.dart';
 import 'features/water_intake/presentation/bloc/water_intake_bloc.dart';
 import 'features/water_intake/presentation/bloc/water_intake_event.dart';
+import 'features/sleep/presentation/bloc/sleep_bloc.dart';
+import 'features/sleep/presentation/bloc/sleep_event.dart';
 
 class GroundStationApp extends StatelessWidget {
   const GroundStationApp({super.key});
 
-  @override
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
@@ -23,6 +24,7 @@ class GroundStationApp extends StatelessWidget {
         BlocProvider(
           create: (context) => getIt<WaterIntakeBloc>()..add(LoadWaterIntake()),
         ),
+        BlocProvider(create: (context) => getIt<SleepBloc>()..add(LoadSleep())),
       ],
       child: BlocBuilder<SettingsBloc, SettingsState>(
         builder: (context, state) {

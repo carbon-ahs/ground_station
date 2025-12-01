@@ -268,9 +268,40 @@ class SettingsPage extends StatelessWidget {
                         );
                       },
                     ),
+                    const SizedBox(height: 24),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          'Daily Sleep Target',
+                          style: TextStyle(fontSize: 16),
+                        ),
+                        Text(
+                          '${state.sleepTarget.toStringAsFixed(1).replaceAll(RegExp(r'\.0$'), '')} hours',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+                    Slider(
+                      value: state.sleepTarget,
+                      min: 4.0,
+                      max: 12.0,
+                      divisions: 16, // 0.5 increments: (12-4)/0.5 = 16
+                      label: '${state.sleepTarget} hours',
+                      onChanged: (value) {
+                        context.read<SettingsBloc>().add(
+                          UpdateSleepTarget(value),
+                        );
+                      },
+                    ),
                     const SizedBox(height: 4),
                     const Text(
-                      'Set your daily water intake goal (1-20 glasses)',
+                      'Set your daily sleep goal (4-12 hours)',
                       style: TextStyle(fontSize: 12, color: Colors.grey),
                     ),
                   ],

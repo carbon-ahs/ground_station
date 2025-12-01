@@ -27,3 +27,12 @@ class UpdateWaterIntakeTarget extends SettingsEvent {
   @override
   List<Object> get props => [target];
 }
+
+class UpdateSleepTarget extends SettingsEvent {
+  final double target;
+
+  const UpdateSleepTarget(this.target);
+
+  @override
+  List<Object> get props => [target];
+}

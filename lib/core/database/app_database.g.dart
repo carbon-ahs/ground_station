@@ -78,13 +78,15 @@ class _$AppDatabase extends AppDatabase {
 
   WaterIntakeDao? _waterIntakeDaoInstance;
 
+  SleepDao? _sleepDaoInstance;
+
   Future<sqflite.Database> open(
     String path,
     List<Migration> migrations, [
     Callback? callback,
   ]) async {
     final databaseOptions = sqflite.OpenDatabaseOptions(
-      version: 2,
+      version: 3,
       onConfigure: (database) async {
         await database.execute('PRAGMA foreign_keys = ON');
         await callback?.onConfigure?.call(database);
@@ -105,6 +107,8 @@ class _$AppDatabase extends AppDatabase {
             'CREATE TABLE IF NOT EXISTS `habit_logs` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `habitId` INTEGER NOT NULL, `timestamp` INTEGER NOT NULL, FOREIGN KEY (`habitId`) REFERENCES `HabitEntity` (`id`) ON UPDATE NO ACTION ON DELETE CASCADE)');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `WaterIntakeEntity` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `date` TEXT NOT NULL, `glassCount` INTEGER NOT NULL)');
+        await database.execute(
+            'CREATE TABLE IF NOT EXISTS `sleep_records` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `date` TEXT NOT NULL, `hours` REAL NOT NULL)');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -126,6 +130,11 @@ class _$AppDatabase extends AppDatabase {
   WaterIntakeDao get waterIntakeDao {
     return _waterIntakeDaoInstance ??=
         _$WaterIntakeDao(database, changeListener);
+  }
+
+  @override
+  SleepDao get sleepDao {
+    return _sleepDaoInstance ??= _$SleepDao(database, changeListener);
   }
 }
 
@@ -346,6 +355,80 @@ class _$WaterIntakeDao extends WaterIntakeDao {
   @override
   Future<void> updateWaterIntake(WaterIntakeEntity entity) async {
     await _waterIntakeEntityUpdateAdapter.update(
+        entity, OnConflictStrategy.abort);
+  }
+}
+
+class _$SleepDao extends SleepDao {
+  _$SleepDao(
+    this.database,
+    this.changeListener,
+  )   : _queryAdapter = QueryAdapter(database),
+        _sleepRecordEntityInsertionAdapter = InsertionAdapter(
+            database,
+            'sleep_records',
+            (SleepRecordEntity item) => <String, Object?>{
+                  'id': item.id,
+                  'date': item.date,
+                  'hours': item.hours
+                }),
+        _sleepRecordEntityUpdateAdapter = UpdateAdapter(
+            database,
+            'sleep_records',
+            ['id'],
+            (SleepRecordEntity item) => <String, Object?>{
+                  'id': item.id,
+                  'date': item.date,
+                  'hours': item.hours
+                });
+
+  final sqflite.DatabaseExecutor database;
+
+  final StreamController<String> changeListener;
+
+  final QueryAdapter _queryAdapter;
+
+  final InsertionAdapter<SleepRecordEntity> _sleepRecordEntityInsertionAdapter;
+
+  final UpdateAdapter<SleepRecordEntity> _sleepRecordEntityUpdateAdapter;
+
+  @override
+  Future<SleepRecordEntity?> getSleepForDate(String date) async {
+    return _queryAdapter.query('SELECT * FROM sleep_records WHERE date = ?1',
+        mapper: (Map<String, Object?> row) => SleepRecordEntity(
+            id: row['id'] as int?,
+            date: row['date'] as String,
+            hours: row['hours'] as double),
+        arguments: [date]);
+  }
+
+  @override
+  Future<void> deleteSleepForDate(String date) async {
+    await _queryAdapter.queryNoReturn(
+        'DELETE FROM sleep_records WHERE date = ?1',
+        arguments: [date]);
+  }
+
+  @override
+  Future<List<SleepRecordEntity>> getSleepHistory(int limit) async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM sleep_records ORDER BY date DESC LIMIT ?1',
+        mapper: (Map<String, Object?> row) => SleepRecordEntity(
+            id: row['id'] as int?,
+            date: row['date'] as String,
+            hours: row['hours'] as double),
+        arguments: [limit]);
+  }
+
+  @override
+  Future<void> insertSleep(SleepRecordEntity entity) async {
+    await _sleepRecordEntityInsertionAdapter.insert(
+        entity, OnConflictStrategy.replace);
+  }
+
+  @override
+  Future<void> updateSleep(SleepRecordEntity entity) async {
+    await _sleepRecordEntityUpdateAdapter.update(
         entity, OnConflictStrategy.abort);
   }
 }
