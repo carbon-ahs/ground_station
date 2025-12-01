@@ -10,6 +10,8 @@ import 'features/water_intake/presentation/bloc/water_intake_bloc.dart';
 import 'features/water_intake/presentation/bloc/water_intake_event.dart';
 import 'features/sleep/presentation/bloc/sleep_bloc.dart';
 import 'features/sleep/presentation/bloc/sleep_event.dart';
+import 'features/daily_log/presentation/bloc/daily_log_bloc.dart';
+import 'features/daily_log/presentation/bloc/daily_log_event.dart';
 
 class GroundStationApp extends StatelessWidget {
   const GroundStationApp({super.key});
@@ -25,6 +27,9 @@ class GroundStationApp extends StatelessWidget {
           create: (context) => getIt<WaterIntakeBloc>()..add(LoadWaterIntake()),
         ),
         BlocProvider(create: (context) => getIt<SleepBloc>()..add(LoadSleep())),
+        BlocProvider(
+          create: (context) => getIt<DailyLogBloc>()..add(const LoadDailyLog()),
+        ),
       ],
       child: BlocBuilder<SettingsBloc, SettingsState>(
         builder: (context, state) {

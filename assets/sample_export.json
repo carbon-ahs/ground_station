@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "habits": [
+    {
+      "id": 1,
+      "title": "Morning Jog",
+      "description": "30 minutes around the park",
+      "created_at": 1704067200000
+    },
+    {
+      "id": 2,
+      "title": "Read",
+      "description": "Read 10 pages",
+      "created_at": 1704067200000
+    }
+  ],
+  "habit_logs": [
+    {
+      "habit_id": 1,
+      "timestamp": 1704070800000
+    },
+    {
+      "habit_id": 2,
+      "timestamp": 1704157200000
+    }
+  ],
+  "daily_logs": [
+    {
+      "date": "2024-01-01",
+      "mit_title": "Finish Project Proposal",
+      "mit_completed": true,
+      "notes": [
+        "Meeting with team at 10 AM",
+        "Remember to email client"
+      ]
+    },
+    {
+      "date": "2024-01-02",
+      "mit_title": "Grocery Shopping",
+      "mit_completed": false,
+      "notes": []
+    }
+  ]
+}

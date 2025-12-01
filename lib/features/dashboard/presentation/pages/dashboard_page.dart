@@ -6,6 +6,7 @@ import '../widgets/stats_card.dart';
 import '../../../../core/presentation/widgets/ground_station_app_bar.dart';
 import '../widgets/water_intake_card.dart';
 import '../widgets/sleep_tracker_card.dart';
+import '../widgets/daily_log_card.dart';
 
 class DashboardPage extends StatelessWidget {
   const DashboardPage({super.key});
@@ -97,6 +98,10 @@ class DashboardPage extends StatelessWidget {
 
                 // Sleep Tracker Card
                 const SleepTrackerCard(),
+                const SizedBox(height: 16),
+
+                // Daily Log Card
+                const DailyLogCard(),
                 const SizedBox(height: 24),
               ],
             ),
