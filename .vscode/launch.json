@@ -1,0 +1,28 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "ground_station",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "Run on Android (DUB LX1)",
+            "request": "launch",
+            "type": "dart",
+            "deviceId": "BVK6R19920001247"
+        },
+        {
+            "name": "ground_station (profile)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "ground_station (release)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        }
+    ]
+}

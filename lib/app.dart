@@ -35,6 +35,7 @@ class GroundStationApp extends StatelessWidget {
         builder: (context, state) {
           return MaterialApp.router(
             title: 'Ground Station',
+            debugShowCheckedModeBanner: false,
             theme: ThemeData(
               useMaterial3: true,
               colorScheme: ColorScheme.fromSeed(
