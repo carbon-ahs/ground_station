@@ -11,23 +11,23 @@ class SplashPage extends StatefulWidget {
 
 class _SplashPageState extends State<SplashPage>
     with SingleTickerProviderStateMixin {
-  late AnimationController _fadeController;
-  late Animation<double> _fadeAnimation;
+  // late AnimationController _fadeController;
+  // late Animation<double> _fadeAnimation;
 
   @override
   void initState() {
     super.initState();
 
-    _fadeController = AnimationController(
-      duration: const Duration(milliseconds: 1500),
-      vsync: this,
-    );
-    _fadeAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(parent: _fadeController, curve: Curves.easeIn));
+    // _fadeController = AnimationController(
+    //   duration: const Duration(milliseconds: 1500),
+    //   vsync: this,
+    // );
+    // _fadeAnimation = Tween<double>(
+    //   begin: 0.0,
+    //   end: 1.0,
+    // ).animate(CurvedAnimation(parent: _fadeController, curve: Curves.easeIn));
 
-    _fadeController.forward();
+    // _fadeController.forward();
 
     // Navigate to dashboard after 2 seconds
     Future.delayed(const Duration(seconds: 1), () {
@@ -39,7 +39,7 @@ class _SplashPageState extends State<SplashPage>
 
   @override
   void dispose() {
-    _fadeController.dispose();
+    // _fadeController.dispose();
     super.dispose();
   }
 
@@ -60,34 +60,31 @@ class _SplashPageState extends State<SplashPage>
           ),
         ),
         child: Center(
-          child: FadeTransition(
-            opacity: _fadeAnimation,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Lottie.asset(
-                  'assets/animations/satellite_dish.json',
-                  width: double.maxFinite,
-                  height: 300,
-                  fit: BoxFit.contain,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Lottie.asset(
+                'assets/animations/satellite_dish.json',
+                width: double.maxFinite,
+                height: 300,
+                fit: BoxFit.contain,
+              ),
+              const SizedBox(height: 24),
+              Text(
+                'Ground Station',
+                style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                  color: colorScheme.onPrimaryContainer,
+                  fontWeight: FontWeight.bold,
                 ),
-                const SizedBox(height: 24),
-                Text(
-                  'Ground Station',
-                  style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                    color: colorScheme.onPrimaryContainer,
-                    fontWeight: FontWeight.bold,
-                  ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Your Personal Mission Control',
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                  color: colorScheme.onSecondaryContainer,
                 ),
-                const SizedBox(height: 8),
-                Text(
-                  'Your Personal Mission Control',
-                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    color: colorScheme.onSecondaryContainer,
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
