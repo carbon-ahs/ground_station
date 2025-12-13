@@ -37,61 +37,6 @@ class DashboardPage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'Overview',
-                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 16),
-
-                // Stats Cards - Row layout to prevent overflow
-                Row(
-                  children: [
-                    Expanded(
-                      child: StatsCard(
-                        title: 'Total',
-                        value: totalHabits.toString(),
-                        icon: Icons.list_alt,
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: StatsCard(
-                        title: 'Done',
-                        value: completedToday.toString(),
-                        icon: Icons.check_circle,
-                        color: Theme.of(context).colorScheme.tertiary,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 12),
-                Row(
-                  children: [
-                    Expanded(
-                      child: StatsCard(
-                        title: 'Rate',
-                        value: '$completionRate%',
-                        icon: Icons.trending_up,
-                        color: Theme.of(context).colorScheme.secondary,
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: StatsCard(
-                        title: 'Streak',
-                        value: bestStreak.toString(),
-                        icon: Icons.local_fire_department,
-                        color: Colors.orange,
-                      ),
-                    ),
-                  ],
-                ),
-
-                const SizedBox(height: 24),
-
                 // Water Intake Card
                 const WaterIntakeCard(),
                 const SizedBox(height: 16),
@@ -108,6 +53,70 @@ class DashboardPage extends StatelessWidget {
           );
         },
       ),
+    );
+  }
+
+  Widget _buildOverviewWithCards(
+    BuildContext context,
+    int totalHabits,
+    int completedToday,
+    String completionRate,
+    int bestStreak,
+  ) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Overview',
+          style: Theme.of(
+            context,
+          ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 16),
+        Row(
+          children: [
+            Expanded(
+              child: StatsCard(
+                title: 'Total',
+                value: totalHabits.toString(),
+                icon: Icons.list_alt,
+                color: Theme.of(context).colorScheme.primary,
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: StatsCard(
+                title: 'Done',
+                value: completedToday.toString(),
+                icon: Icons.check_circle,
+                color: Theme.of(context).colorScheme.tertiary,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        Row(
+          children: [
+            Expanded(
+              child: StatsCard(
+                title: 'Rate',
+                value: '$completionRate%',
+                icon: Icons.trending_up,
+                color: Theme.of(context).colorScheme.secondary,
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: StatsCard(
+                title: 'Streak',
+                value: bestStreak.toString(),
+                icon: Icons.local_fire_department,
+                color: Colors.orange,
+              ),
+            ),
+          ],
+        ),
+      ],
     );
   }
 }
