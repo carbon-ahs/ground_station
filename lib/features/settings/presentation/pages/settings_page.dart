@@ -65,95 +65,6 @@ class SettingsPage extends StatelessWidget {
     }
   }
 
-  Future<void> _viewSampleCSV(BuildContext context) async {
-    const sampleCSV = '''habit_id,title,description,created_at,log_date
-1,Morning Exercise,30 minutes of cardio,2024-01-01T08:00:00.000,2024-01-01T08:30:00.000
-1,Morning Exercise,30 minutes of cardio,2024-01-01T08:00:00.000,2024-01-02T08:30:00.000
-1,Morning Exercise,30 minutes of cardio,2024-01-01T08:00:00.000,2024-01-03T08:30:00.000
-2,Read Books,Read for 20 minutes,2024-01-01T09:00:00.000,2024-01-01T21:00:00.000
-2,Read Books,Read for 20 minutes,2024-01-01T09:00:00.000,2024-01-02T21:00:00.000
-3,Drink Water,8 glasses per day,2024-01-01T10:00:00.000,''';
-
-    if (context.mounted) {
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: const Text('Sample CSV Format'),
-          content: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Text(
-                  'Use this format for importing habits:',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 16),
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: Colors.grey[200],
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: SelectableText(
-                    sampleCSV,
-                    style: const TextStyle(
-                      fontFamily: 'monospace',
-                      fontSize: 12,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                const Text(
-                  'Key Points:',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 8),
-                const Text('• Same habit_id groups logs together'),
-                const Text('• Empty log_date = no completions'),
-                const Text('• Use ISO 8601 date format'),
-              ],
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () async {
-                try {
-                  final directory = await getApplicationDocumentsDirectory();
-                  final file = File(
-                    '${directory.path}/sample_habits_import.csv',
-                  );
-                  await file.writeAsString(sampleCSV);
-
-                  if (context.mounted) {
-                    Navigator.of(context).pop(); // Close dialog
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('Sample CSV saved to:\n${file.path}'),
-                        duration: const Duration(seconds: 4),
-                      ),
-                    );
-                  }
-                } catch (e) {
-                  if (context.mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Failed to save sample CSV: $e')),
-                    );
-                  }
-                }
-              },
-              child: const Text('Download Sample'),
-            ),
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Close'),
-            ),
-          ],
-        ),
-      );
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -310,36 +221,7 @@ class SettingsPage extends StatelessWidget {
             },
           ),
           const Divider(),
-          const Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Text(
-              'Data Management',
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-                color: Colors.grey,
-              ),
-            ),
-          ),
-          ListTile(
-            leading: const Icon(Icons.upload_file),
-            title: const Text('Export to CSV'),
-            subtitle: const Text('Save habits to device storage'),
-            onTap: () => _exportCSV(context),
-          ),
-          ListTile(
-            leading: const Icon(Icons.download),
-            title: const Text('Import from CSV'),
-            subtitle: const Text('Import habits from a CSV file'),
-            onTap: () => _importCSV(context),
-          ),
-          ListTile(
-            leading: const Icon(Icons.description),
-            title: const Text('View Sample CSV Format'),
-            subtitle: const Text('See example import file format'),
-            onTap: () => _viewSampleCSV(context),
-          ),
-          const Divider(),
+
           const Padding(
             padding: EdgeInsets.all(16.0),
             child: Text(
@@ -364,5 +246,131 @@ class SettingsPage extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Widget _buildDataManagementSegment(BuildContext context) {
+    return Column(
+      children: [
+        const Padding(
+          padding: EdgeInsets.all(16.0),
+          child: Text(
+            'Data Management',
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+              color: Colors.grey,
+            ),
+          ),
+        ),
+        ListTile(
+          leading: const Icon(Icons.upload_file),
+          title: const Text('Export to CSV'),
+          subtitle: const Text('Save habits to device storage'),
+          onTap: () => _exportCSV(context),
+        ),
+        ListTile(
+          leading: const Icon(Icons.download),
+          title: const Text('Import from CSV'),
+          subtitle: const Text('Import habits from a CSV file'),
+          onTap: () => _importCSV(context),
+        ),
+        ListTile(
+          leading: const Icon(Icons.description),
+          title: const Text('View Sample CSV Format'),
+          subtitle: const Text('See example import file format'),
+          onTap: () => _viewSampleCSV(context),
+        ),
+        const Divider(),
+      ],
+    );
+  }
+
+  Future<void> _viewSampleCSV(BuildContext context) async {
+    const sampleCSV = '''habit_id,title,description,created_at,log_date
+1,Morning Exercise,30 minutes of cardio,2024-01-01T08:00:00.000,2024-01-01T08:30:00.000
+1,Morning Exercise,30 minutes of cardio,2024-01-01T08:00:00.000,2024-01-02T08:30:00.000
+1,Morning Exercise,30 minutes of cardio,2024-01-01T08:00:00.000,2024-01-03T08:30:00.000
+2,Read Books,Read for 20 minutes,2024-01-01T09:00:00.000,2024-01-01T21:00:00.000
+2,Read Books,Read for 20 minutes,2024-01-01T09:00:00.000,2024-01-02T21:00:00.000
+3,Drink Water,8 glasses per day,2024-01-01T10:00:00.000,''';
+
+    if (context.mounted) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Sample CSV Format'),
+          content: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text(
+                  'Use this format for importing habits:',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 16),
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[200],
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: SelectableText(
+                    sampleCSV,
+                    style: const TextStyle(
+                      fontFamily: 'monospace',
+                      fontSize: 12,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                const Text(
+                  'Key Points:',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 8),
+                const Text('• Same habit_id groups logs together'),
+                const Text('• Empty log_date = no completions'),
+                const Text('• Use ISO 8601 date format'),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () async {
+                try {
+                  final directory = await getApplicationDocumentsDirectory();
+                  final file = File(
+                    '${directory.path}/sample_habits_import.csv',
+                  );
+                  await file.writeAsString(sampleCSV);
+
+                  if (context.mounted) {
+                    Navigator.of(context).pop(); // Close dialog
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Sample CSV saved to:\n${file.path}'),
+                        duration: const Duration(seconds: 4),
+                      ),
+                    );
+                  }
+                } catch (e) {
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Failed to save sample CSV: $e')),
+                    );
+                  }
+                }
+              },
+              child: const Text('Download Sample'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Close'),
+            ),
+          ],
+        ),
+      );
+    }
   }
 }
