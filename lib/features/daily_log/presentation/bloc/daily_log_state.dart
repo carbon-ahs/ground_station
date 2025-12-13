@@ -23,13 +23,14 @@ class DailyLogState extends Equatable {
   DailyLogState copyWith({
     DailyLogStatus? status,
     DailyLogEntity? log,
+    bool clearLog = false,
     List<DailyNoteEntity>? notes,
     List<DailyLogHistoryItem>? history,
     String? errorMessage,
   }) {
     return DailyLogState(
       status: status ?? this.status,
-      log: log ?? this.log,
+      log: clearLog ? null : (log ?? this.log),
       notes: notes ?? this.notes,
       history: history ?? this.history,
       errorMessage: errorMessage ?? this.errorMessage,

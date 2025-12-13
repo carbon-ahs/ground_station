@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../domain/repositories/daily_log_repository.dart';
@@ -9,6 +10,8 @@ class DailyLogBloc extends Bloc<DailyLogEvent, DailyLogState>
   final DailyLogRepository repository;
   DateTime _lastCheckDate = DateTime.now();
 
+  Timer? _midnightTimer;
+
   DailyLogBloc({required this.repository}) : super(const DailyLogState()) {
     on<LoadDailyLog>(_onLoadDailyLog);
     on<LoadDailyLogHistory>(_onLoadDailyLogHistory);
@@ -18,6 +21,7 @@ class DailyLogBloc extends Bloc<DailyLogEvent, DailyLogState>
     on<EditNote>(_onEditNote);
     on<DeleteNote>(_onDeleteNote);
 
+    _scheduleMidnightReload();
     WidgetsBinding.instance.addObserver(this);
   }
 
@@ -30,8 +34,22 @@ class DailyLogBloc extends Bloc<DailyLogEvent, DailyLogState>
           now.day != _lastCheckDate.day) {
         _lastCheckDate = now;
         add(const LoadDailyLog());
+        _scheduleMidnightReload();
       }
     }
+  }
+
+  void _scheduleMidnightReload() {
+    final now = DateTime.now();
+    final tomorrow = DateTime(now.year, now.month, now.day + 1);
+    final durationUntilMidnight = tomorrow.difference(now);
+
+    _midnightTimer?.cancel();
+    _midnightTimer = Timer(durationUntilMidnight, () {
+      _lastCheckDate = DateTime.now();
+      add(const LoadDailyLog());
+      _scheduleMidnightReload();
+    });
   }
 
   Future<void> _onLoadDailyLog(
@@ -49,6 +67,7 @@ class DailyLogBloc extends Bloc<DailyLogEvent, DailyLogState>
         state.copyWith(
           status: DailyLogStatus.success,
           log: log,
+          clearLog: log == null,
           notes: notes as dynamic,
         ),
       );
@@ -158,6 +177,7 @@ class DailyLogBloc extends Bloc<DailyLogEvent, DailyLogState>
 
   @override
   Future<void> close() {
+    _midnightTimer?.cancel();
     WidgetsBinding.instance.removeObserver(this);
     return super.close();
   }

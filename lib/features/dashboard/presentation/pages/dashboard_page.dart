@@ -46,8 +46,8 @@ class DashboardPage extends StatelessWidget {
                 const SizedBox(height: 16),
 
                 // Daily Log Card
-                const DailyLogCard(),
-                const SizedBox(height: 24),
+                // const DailyLogCard(),
+                // const SizedBox(height: 24),
               ],
             ),
           );
