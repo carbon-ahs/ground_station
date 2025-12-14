@@ -48,3 +48,4 @@ flutter:
     - assets/sample_habits_import.csv
     - assets/sample_export.json
     - assets/CSV_IMPORT_FORMAT.md
+    - assets/satellite_alt_512dp.png
