@@ -1,5 +1,9 @@
 # changelog
 
+## 1.0.1+3
+
+- Realized branch  migrated
+
 ## 1.0.1+2
 
 - Fixed Lottie animation visibility in Dark Mode
