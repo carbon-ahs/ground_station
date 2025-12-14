@@ -9,3 +9,6 @@
     - app label changed to Ground Station
     - app package name changed to com.groundstation.ground_station
     - app min sdk version changed to 21
+    - splash screen added
+    - startup on dashboard
+    - app version info added

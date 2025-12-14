@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import '../../../../core/services/csv_service.dart';
@@ -234,12 +235,22 @@ class SettingsPage extends StatelessWidget {
             ),
           ),
           ListTile(
-            leading: const Icon(Icons.info_outline),
+            leading: const Icon(Icons.satellite_alt),
             title: const Text('Version'),
-            subtitle: const Text('1.0.0'),
+            subtitle: FutureBuilder<PackageInfo>(
+              future: PackageInfo.fromPlatform(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return Text(
+                    '${snapshot.data!.version} (${snapshot.data!.buildNumber})',
+                  );
+                }
+                return const Text('Loading...');
+              },
+            ),
           ),
           ListTile(
-            leading: const Icon(Icons.code),
+            leading: const Icon(Icons.settings_input_antenna),
             title: const Text('Ground Station'),
             subtitle: const Text('Your Personal Mission Control'),
           ),
