@@ -1,0 +1,11 @@
+flutter_native_splash:
+  color: "#FFFFFF"
+  image: assets/satellite_alt_512dp.png
+  color_dark: "#000000"
+  image_dark: assets/satellite_alt_512dp.png
+
+  android_12:
+    color: "#FFFFFF"
+    image: assets/satellite_alt_512dp.png
+    color_dark: "#000000"
+    image_dark: assets/satellite_alt_512dp.png
