@@ -34,17 +34,93 @@ class HabitsView extends StatelessWidget {
             return Center(child: Text('Error: ${state.errorMessage}'));
           } else if (state.habits.isEmpty) {
             return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  // lottie animation
-                  Lottie.asset('assets/animations/antenna.json'),
-                  SizedBox(height: 16),
-                  Text(
-                    'No habits yet. Add one!',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-                  ),
-                ],
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    // lottie animation
+                    Lottie.asset(
+                      'assets/animations/antenna.json',
+                      delegates: Theme.of(context).brightness == Brightness.dark
+                          ? LottieDelegates(
+                              values: [
+                                // Dim the environment (Clouds, Trees, Bush, Floor)
+                                ValueDelegate.color(const [
+                                  'Cloud',
+                                  '**',
+                                  'Fill 1',
+                                ], value: Colors.grey[800]),
+                                ValueDelegate.color(const [
+                                  'Branch',
+                                  '**',
+                                  'Fill 1',
+                                ], value: Colors.grey[700]),
+                                ValueDelegate.color(const [
+                                  'Bush',
+                                  '**',
+                                  'Fill 1',
+                                ], value: Colors.grey[700]),
+                                ValueDelegate.color(const [
+                                  'Ground',
+                                  '**',
+                                  'Fill 1',
+                                ], value: Colors.grey[700]),
+                                ValueDelegate.color(const [
+                                  'Background',
+                                  '**',
+                                  'Fill 1',
+                                ], value: Colors.transparent),
+                                // Antenna Structure (Blue -> Light Blue)
+                                ValueDelegate.color(const [
+                                  'Receiver',
+                                  '**',
+                                  'Fill 1',
+                                ], value: Colors.lightBlue[200]),
+                                ValueDelegate.color(const [
+                                  'Tower Poles',
+                                  '**',
+                                  'Fill 1',
+                                ], value: Colors.lightBlue[200]),
+                                ValueDelegate.color(const [
+                                  'Ground Line',
+                                  '**',
+                                  'Fill 1',
+                                ], value: Colors.lightBlue[200]),
+                                ValueDelegate.color(const [
+                                  'Receiver Shadow',
+                                  '**',
+                                  'Fill 1',
+                                ], value: Colors.blueGrey[700]),
+                                ValueDelegate.color(const [
+                                  'Ground Shadow',
+                                  '**',
+                                  'Fill 1',
+                                ], value: Colors.blueGrey[900]),
+                                // Signals (Yellow -> Yellow Accent)
+                                ValueDelegate.color(const [
+                                  'Left Signal',
+                                  '**',
+                                  'Fill 1',
+                                ], value: Colors.yellowAccent),
+                                ValueDelegate.color(const [
+                                  'Right Signal',
+                                  '**',
+                                  'Fill 1',
+                                ], value: Colors.yellowAccent),
+                              ],
+                            )
+                          : null,
+                    ),
+                    SizedBox(height: 16),
+                    Text(
+                      'No habits yet. Add one!',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             );
           } else {
