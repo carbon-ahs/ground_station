@@ -1,5 +1,11 @@
 # changelog
 
+## 1.0.1+2
+
+- Fixed Lottie animation visibility in Dark Mode
+- Optimized layout for Landscape Mode
+- Native splash screen integration
+
 ## 1.0.1
 
 - Initial release
