@@ -52,6 +52,7 @@ class GroundStationApp extends StatelessWidget {
               textTheme: GoogleFonts.interTextTheme(ThemeData.dark().textTheme),
             ),
             themeMode: state.themeMode,
+            debugShowCheckedModeBanner: false,
             routerConfig: appRouter,
           );
         },
