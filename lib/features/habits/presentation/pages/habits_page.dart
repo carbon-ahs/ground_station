@@ -41,6 +41,11 @@ class HabitsView extends StatelessWidget {
                     // lottie animation
                     Lottie.asset(
                       'assets/animations/antenna.json',
+                      height:
+                          MediaQuery.of(context).orientation ==
+                              Orientation.landscape
+                          ? 200
+                          : null,
                       delegates: Theme.of(context).brightness == Brightness.dark
                           ? LottieDelegates(
                               values: [
