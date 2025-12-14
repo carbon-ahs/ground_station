@@ -18,7 +18,7 @@ final _shellNavigatorKey = GlobalKey<NavigatorState>();
 
 final appRouter = GoRouter(
   navigatorKey: _rootNavigatorKey,
-  initialLocation: '/',
+  initialLocation: '/dashboard',
   routes: [
     GoRoute(path: '/', builder: (context, state) => const SplashPage()),
     GoRoute(
